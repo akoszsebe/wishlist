@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlist/src/Controller.dart';
 import 'package:wishlist/src/screens/add_screen.dart';
+import 'package:wishlist/src/screens/theme_change_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class HomeView extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).accentColor,
         onPressed: () => {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddScreen()))
@@ -38,19 +40,29 @@ class HomeView extends State<HomeScreen> {
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
-                expandedHeight: 100.0,
-                floating: true,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    title: Text(AppLocalizations.of(context).tr('title'),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                        )),
-                    background:
-                        Container(color: Theme.of(context).primaryColor)),
-              ),
+                  expandedHeight: 100.0,
+                  floating: true,
+                  pinned: false,
+                  flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: true,
+                      title: Text(AppLocalizations.of(context).tr('title'),
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          )),
+                      background:
+                          Container(color: Theme.of(context).primaryColor)),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      tooltip: 'Add new entry',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ThemeChangerScreen()));
+                      },
+                    ),
+                  ]),
             ];
           },
           body: ListView(
@@ -60,10 +72,11 @@ class HomeView extends State<HomeScreen> {
                   child: ListTile(
                     title: Text("vegyel tusfurdot"),
                     subtitle: Text("1 liter"),
-                     trailing: Icon(Icons.more_vert),
-                     onTap: ()=>{
-                       showAlertDialog(context,"Item","content",()=>{},()=>{})
-                     },
+                    trailing: Icon(Icons.more_vert),
+                    onTap: () => {
+                      showAlertDialog(
+                          context, "Item", "content", () => {}, () => {})
+                    },
                   ))
             ],
           )),

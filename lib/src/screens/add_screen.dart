@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:wishlist/src/Controller.dart';
-import 'package:wishlist/util/AppKeys.dart';
+import 'package:wishlist/util/app_keys.dart';
 
 class AddScreen extends StatefulWidget {
   final String todoId;

@@ -1,5 +1,6 @@
 {
     "title": "Shopping List",
+    "settings": "Settings",
     "msg": "Hello {} in the {} world ",
     "clickMe": "Click me",
     "profile": {
