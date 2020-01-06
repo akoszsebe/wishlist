@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-void showAlertDialog(BuildContext context, String title, String content, VoidCallback onOK,VoidCallback onEdit) {
+void showAlertDialog(BuildContext context, String title, String content,
+    VoidCallback onOK, VoidCallback onEdit) {
   // flutter defined function
   showDialog(
     context: context,
@@ -13,12 +14,10 @@ void showAlertDialog(BuildContext context, String title, String content, VoidCal
         title: Center(
             child: new Text(
           title,
-          style: TextStyle(color: Colors.white),
         )),
         content: new Text(
           content,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white70),
         ),
         actions: <Widget>[
           Container(
@@ -37,7 +36,7 @@ void showAlertDialog(BuildContext context, String title, String content, VoidCal
                     Container(
                       height: 20.0,
                       width: 1.0,
-                      color: Colors.white30,
+                      color: Theme.of(context).primaryIconTheme.color,
                       margin: const EdgeInsets.only(left: 25.0, right: 15.0),
                     ),
                     new FlatButton(

@@ -1,6 +1,9 @@
 {
     "title": "Shopping List",
     "settings": "Settings",
+    "language" : "Language",
+    "light" : "Light",
+    "dark" : "Dark",
     "msg": "Hello {} in the {} world ",
     "clickMe": "Click me",
     "profile": {

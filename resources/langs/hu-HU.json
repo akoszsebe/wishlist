@@ -1,6 +1,9 @@
 {
-    "title": "Szia",
+    "title": "Bevasarlo lista",
     "settings": "Bealitasok",
+    "language" : "Nyelv",
+    "light" : "Vilagos",
+    "dark" : "Sotet",
     "msg": "Szia {} a {} vilag ",
     "clickMe": "Cakkints ram",
     "profile": {
