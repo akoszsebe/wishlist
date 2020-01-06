@@ -1,0 +1,17 @@
+{
+    "title": "Szia",
+    "msg": "Szia {} a {} vilag ",
+    "clickMe": "Cakkints ram",
+    "profile": {
+      "reset_password": {
+        "title": "Reset Password",
+        "username": "Username",
+        "password": "password"
+      }
+    },
+    "clicked": {
+      "zero": "You clicked {} times!",
+      "one": "You clicked {} time!",
+      "other": "You clicked {} times!"
+    }
+  }
