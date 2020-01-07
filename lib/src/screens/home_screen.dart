@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:wishlist/src/Controller.dart';
+import 'package:wishlist/src/todo_controller.dart';
 import 'package:wishlist/src/screens/add_screen.dart';
 import 'package:wishlist/src/screens/theme_change_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
@@ -13,7 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeView extends State<HomeScreen> {
-  final Con _con = Con.con;
+  final TodoController _con = TodoController.con;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @protected
   @override
@@ -30,6 +31,7 @@ class HomeView extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final data = _con.list;
     return Scaffold(
+      key: scaffoldKey,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Theme.of(context).accentColor,
@@ -88,6 +90,35 @@ class HomeView extends State<HomeScreen> {
                 title: Text(d.title),
                 subtitle: Text(d.content),
                 trailing: Icon(Icons.more_vert),
+                onLongPress: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          color: Theme.of(context).primaryColor,
+                          child: new Wrap(
+                            children: <Widget>[
+                              new ListTile(
+                                  leading: new Icon(Icons.notifications),
+                                  title: new Text('Notify'),
+                                  onTap: () => {}),
+                              new ListTile(
+                                  leading: new Icon(Icons.edit),
+                                  title: new Text('Edit'),
+                                  onTap: () => {}),
+                              new ListTile(
+                                leading: new Icon(Icons.delete),
+                                title: new Text('Delete'),
+                                onTap: () { _con.deleteTodo(d.id); Navigator.pop(context);},
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
                 onTap: () => {
                   showAlertDialog(
                       context, "Item", "content", () => {}, () => {})

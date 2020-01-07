@@ -9,7 +9,7 @@ import 'src/App.dart';
 void main() {
   runApp(EasyLocalization(
     child: ChangeNotifierProvider(
-      builder: (_) => ThemeProvider(isLightTheme: false ),
+      create: (_) => ThemeProvider(isLightTheme: false ),
       child: MVCApp(),
     ),
   ));

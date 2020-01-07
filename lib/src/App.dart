@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlist/src/Controller.dart';
+import 'package:wishlist/src/todo_controller.dart';
 import 'package:wishlist/src/screens/home_screen.dart';
 import 'package:wishlist/src/screens/theme_change_screen.dart';
 import 'package:wishlist/util/app_routes.dart';
@@ -14,7 +14,7 @@ class MVCApp extends AppMVC {
   MVCApp({Key key}) : super(con: _controller, key: key);
 
   /// An external reference to the Controller if you wish. -gp
-  static final Con _controller = Con();
+  static final TodoController _controller = TodoController();
 
   static MaterialApp _app;
 

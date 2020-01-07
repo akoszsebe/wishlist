@@ -22,8 +22,21 @@ class TodoApiProvider extends ApiProvider {
 
   Future<bool> addTodo(TodoRequest todoRequest) async {
     try {
-      Response response = await dio.post(baseUrl + "/reports/create",
+      await dio.post(baseUrl + "/reports/create",
           data: todoRequest.toJson(),
+          options: Options(contentType: ContentType.parse("application/json")),
+          cancelToken: token);
+      return true;
+    } on DioError catch (e) {
+      print("Exception occured: $e");
+      throw ApiExeption.fromDioError(e);
+    }
+  }
+
+  Future<bool> deleteTodo(DeleteTodoRequest deleteTodoRequest) async{
+    try {
+      await dio.post(baseUrl + "/reports/delete",
+          data: deleteTodoRequest.toJson(),
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;

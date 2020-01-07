@@ -3,16 +3,16 @@ import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 
-class Con extends ControllerMVC {
-  factory Con() {
-    if (_this == null) _this = Con._();
+class TodoController extends ControllerMVC {
+  factory TodoController() {
+    if (_this == null) _this = TodoController._();
     return _this;
   }
-  static Con _this;
+  static TodoController _this;
 
-  Con._();
+  TodoController._();
 
-  static Con get con => _this;
+  static TodoController get con => _this;
 
   List<TodoResponse> list;
 
@@ -31,9 +31,19 @@ class Con extends ControllerMVC {
   }
 
   Future<void> saveTodo(String title, String content) async {
+    list = null;
     await todoApiProvider
         .addTodo(TodoRequest(
             title: title, content: content, userId: "zsebea@yahoo.com"))
+        .catchError((error) {
+      throw error;
+    }).then((onValue) => {loadData()});
+  }
+
+  Future<void> deleteTodo(int id) async {
+    list = null;
+    await todoApiProvider
+        .deleteTodo(DeleteTodoRequest(id: id))
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});

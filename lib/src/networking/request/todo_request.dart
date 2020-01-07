@@ -25,3 +25,15 @@ class TodoRequest {
   Map<String, dynamic> toJson() =>
       {"title": title, "content": content, "user_id": userId};
 }
+
+class DeleteTodoRequest {
+  int id;
+  
+  DeleteTodoRequest({this.id});
+
+  factory DeleteTodoRequest.fromJson(Map<String, dynamic> json) => new DeleteTodoRequest(
+      id: json["id"]);
+
+  Map<String, dynamic> toJson() =>
+      {"id": id};
+}

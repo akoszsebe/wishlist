@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:wishlist/src/Controller.dart';
+import 'package:wishlist/src/todo_controller.dart';
 import 'package:wishlist/util/app_keys.dart';
 
 class AddScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final Con _con = Con.con;
+  final TodoController _con = TodoController.con;
   String _title;
   String _content;
 
