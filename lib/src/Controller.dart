@@ -1,4 +1,6 @@
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
+import 'package:wishlist/src/networking/response/todo_response.dart';
 
 class Con extends ControllerMVC {
   factory Con() {
@@ -11,12 +13,19 @@ class Con extends ControllerMVC {
 
   static Con get con => _this;
 
+  List<TodoResponse> list;
+
+  final TodoApiProvider todoApiProvider = TodoApiProvider();
+
   void init() => loadData();
 
-    Future loadData() async {
-    var load = "";// await model.loadTodos();
-    // In this case, it is the Controller that decides to 'refresh' the View.
+  Future<void> loadData() async {
+    List<TodoResponse> resopnse =
+        await todoApiProvider.getTodos().catchError((error) {
+      throw error;
+    });
+    list = resopnse;
     refresh();
-    return load;
+    return;
   }
 }

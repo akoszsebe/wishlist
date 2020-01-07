@@ -4,6 +4,7 @@
     "language" : "Language",
     "light" : "Light",
     "dark" : "Dark",
+    "nodata" : "No todo",
     "msg": "Hello {} in the {} world ",
     "clickMe": "Click me",
     "profile": {

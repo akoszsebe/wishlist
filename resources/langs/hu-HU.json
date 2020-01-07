@@ -4,6 +4,7 @@
     "language" : "Nyelv",
     "light" : "Vilagos",
     "dark" : "Sotet",
+    "nodata" : "Nincs tennivalo",
     "msg": "Szia {} a {} vilag ",
     "clickMe": "Cakkints ram",
     "profile": {

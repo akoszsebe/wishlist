@@ -27,6 +27,7 @@ class HomeView extends State<HomeScreen> {
   @protected
   @override
   Widget build(BuildContext context) {
+    final data = _con.list;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -65,21 +66,30 @@ class HomeView extends State<HomeScreen> {
                   ]),
             ];
           },
-          body: ListView(
-            children: <Widget>[
-              Card(
-                  margin: EdgeInsets.all(16),
-                  child: ListTile(
-                    title: Text("vegyel tusfurdot"),
-                    subtitle: Text("1 liter"),
-                    trailing: Icon(Icons.more_vert),
-                    onTap: () => {
-                      showAlertDialog(
-                          context, "Item", "content", () => {}, () => {})
-                    },
-                  ))
-            ],
-          )),
+          body: RefreshIndicator(
+              onRefresh: _con.loadData, child: buildList(data))),
+    );
+  }
+
+  Widget buildList(var data) {
+    if (data == null)
+      return Center(child: Text(AppLocalizations.of(context).tr("nodata")));
+    return ListView(
+      children: <Widget>[
+        for (var d in data)
+          Card(
+              margin: EdgeInsets.all(16),
+              child: ListTile(
+                key: Key(d.id.toString()),
+                title: Text(d.title),
+                subtitle: Text(d.content),
+                trailing: Icon(Icons.more_vert),
+                onTap: () => {
+                  showAlertDialog(
+                      context, "Item", "content", () => {}, () => {})
+                },
+              ))
+      ],
     );
   }
 }
