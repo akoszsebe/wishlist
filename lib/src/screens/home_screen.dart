@@ -4,6 +4,7 @@ import 'package:wishlist/src/Controller.dart';
 import 'package:wishlist/src/screens/add_screen.dart';
 import 'package:wishlist/src/screens/theme_change_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
+import 'package:wishlist/util/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   @protected
@@ -72,8 +73,11 @@ class HomeView extends State<HomeScreen> {
   }
 
   Widget buildList(var data) {
-    if (data == null)
-      return Center(child: Text(AppLocalizations.of(context).tr("nodata")));
+    if (data == null) return buildLoader(context);
+    if (data.length == 0)
+      return ListView(children: <Widget>[
+        Center(child: Text(AppLocalizations.of(context).tr("nodata")))
+      ]);
     return ListView(
       children: <Widget>[
         for (var d in data)

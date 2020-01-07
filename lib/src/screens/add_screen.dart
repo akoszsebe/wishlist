@@ -19,8 +19,8 @@ class _AddScreenState extends State<AddScreen> {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final Con _con = Con.con;
-  String _task;
-  String _note;
+  String _title;
+  String _content;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +42,21 @@ class _AddScreenState extends State<AddScreen> {
           child: ListView(
             children: [
               TextFormField(
-                  initialValue: '',
-                  key: AppKeys.taskField,
-                  autofocus: isEditing ? false : true,
-                  style: Theme.of(context).textTheme.headline,
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context).tr('newTodoHint'),
-                  )),
+                initialValue: '',
+                key: AppKeys.taskField,
+                autofocus: isEditing ? false : true,
+                style: Theme.of(context).textTheme.headline,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context).tr('newTodoHint'),
+                ),
+                onSaved: (value) => _title = value,
+                validator: (String arg) {
+                  if (arg.length < 3)
+                    return 'Title must be more than 2 charater';
+                  else
+                    return null;
+                },
+              ),
               TextFormField(
                 initialValue: '',
                 key: AppKeys.noteField,
@@ -57,24 +65,36 @@ class _AddScreenState extends State<AddScreen> {
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context).tr('nothint'),
                 ),
-                onSaved: (value) => _note = value,
+                onSaved: (value) => _content = value,
+                validator: (String arg) {
+                  if (arg.length < 3)
+                    return 'Content must be more than 2 charater';
+                  else
+                    return null;
+                },
               )
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Container(
+        height: 60,
+        child: Center(
+          child: FloatingActionButton.extended(
         key: AppKeys.saveTodoFab,
+        backgroundColor: Theme.of(context).accentColor,
         tooltip: AppLocalizations.of(context).tr('saveChanges'),
-        child: Icon(isEditing ? Icons.check : Icons.add),
+        icon: Icon(Icons.add),
+        label: Text(AppLocalizations.of(context).tr("addtodo")),
         onPressed: () {
           final form = formKey.currentState;
           if (form.validate()) {
             form.save();
+            _con.saveTodo(_title, _content);
             Navigator.pop(context);
           }
         },
-      ),
+      ))),
     );
   }
 

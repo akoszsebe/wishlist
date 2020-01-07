@@ -5,18 +5,11 @@
     "light" : "Light",
     "dark" : "Dark",
     "nodata" : "No todo",
-    "msg": "Hello {} in the {} world ",
-    "clickMe": "Click me",
+    "addtitle": "Add Todo",
+    "addtodo": "Add Todo",
     "profile": {
       "reset_password": {
-        "title": "Reset Password",
-        "username": "Username",
-        "password": "password"
+        "title": "Reset Password"
       }
-    },
-    "clicked": {
-      "zero": "You clicked {} times!",
-      "one": "You clicked {} time!",
-      "other": "You clicked {} times!"
     }
   }

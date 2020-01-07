@@ -19,7 +19,7 @@ class _ThemeChangerScreenState extends State<ThemeChangerScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     var data = EasyLocalizationProvider.of(context).data;
-    dropdownValue = data.savedLocale.languageCode;
+    if (data.savedLocale != null) dropdownValue = data.savedLocale.languageCode;
     print(dropdownValue);
     return Scaffold(
       appBar: AppBar(
