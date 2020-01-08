@@ -8,14 +8,12 @@ import 'package:wishlist/util/theme_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top,SystemUiOverlay.bottom]).then((_) {
-    SharedPrefs.getTheme().then((onValue) {
-      runApp(EasyLocalization(
-        child: ChangeNotifierProvider(
-          create: (_) => ThemeProvider(isLightTheme: onValue),
-          child: MVCApp(),
-        ),
-      ));
-    });
+  SharedPrefs.getTheme().then((onValue) {
+    runApp(EasyLocalization(
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(isLightTheme: onValue),
+        child: MVCApp(),
+      ),
+    ));
   });
 }
