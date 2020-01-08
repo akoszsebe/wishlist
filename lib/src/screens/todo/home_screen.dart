@@ -10,10 +10,10 @@ import 'package:wishlist/util/widgets.dart';
 class HomeScreen extends StatefulWidget {
   @protected
   @override
-  createState() => HomeView();
+  createState() => _HomeScreenState();
 }
 
-class HomeView extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final TodoController _con = TodoController.con;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,6 +21,7 @@ class HomeView extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     /// Calls the Controller when this one-time 'init' event occurs.
     /// Not revealing the 'business logic' that then fires inside.
     _con.init();
