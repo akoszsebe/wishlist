@@ -1,7 +1,12 @@
+import 'package:flushbar/flushbar.dart';
+import 'package:flushbar/flushbar_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
+import 'package:wishlist/util/firebasenotifications.dart';
 
 class TodoController extends ControllerMVC {
   factory TodoController() {
@@ -17,8 +22,18 @@ class TodoController extends ControllerMVC {
   List<TodoResponse> list;
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
+  final NotificationApiProvider notificationApiProvider =
+      NotificationApiProvider();
+  FirebaseNotifications _firebaseNotifications;
 
-  void init() => loadData();
+  void init() async {
+    _firebaseNotifications = new FirebaseNotifications();
+    _firebaseNotifications..setUpFirebase();
+    String firebaseDeviceId = await _firebaseNotifications.getToken();
+    print(firebaseDeviceId);
+    registerForNotification(firebaseDeviceId, "zsebea@yahoo.com");
+    loadData();
+  }
 
   Future<void> loadData() async {
     List<TodoResponse> resopnse =
@@ -47,5 +62,36 @@ class TodoController extends ControllerMVC {
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
+  }
+
+  Future<void> update(int id, String title, String content) async {
+    list = null;
+    await todoApiProvider
+        .updateTodo(UpdateTodoRequest(id: id, title: title, content: content))
+        .catchError((error) {
+      throw error;
+    }).then((onValue) => {loadData()});
+  }
+
+  Future<void> registerForNotification(String token, String userId) async {
+    list = null;
+    await notificationApiProvider
+        .registerForPushNotification(token, userId)
+        .catchError((error) {
+      throw error;
+    }).then((onValue) => {});
+  }
+
+  Future<void> notifyTodo(String title, String message) async {
+    list = null;
+    await notificationApiProvider
+        .notifyTodo(title, message)
+        .catchError((error) {
+      throw error;
+    }).then((onValue) => {loadData()});
+  }
+
+  void addNotificationListener(Function(String, String) listener) {
+    _firebaseNotifications.addListener(listener);
   }
 }

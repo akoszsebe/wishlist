@@ -6,6 +6,12 @@
     "dark" : "Dark",
     "nodata" : "No todo",
     "addtitle": "Add Todo",
+    "updatetodo": "Update",
+    "edittitle": "Edit Todo",
+    "newTodotite": "insert title",
+    "contenttext": "insert content",
+    "contenttextmin": "Content must be more than 2 charater",
+    "titletextmin": "Title must be more than 2 charater",
     "addtodo": "Add Todo",
     "profile": {
       "reset_password": {

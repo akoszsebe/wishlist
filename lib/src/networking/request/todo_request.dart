@@ -8,32 +8,32 @@ class TodoRequest {
   factory TodoRequest.fromJson(Map<String, dynamic> json) => new TodoRequest(
       title: json["title"], content: json["content"], userId: json["user_id"]);
 
-  factory TodoRequest.fromJsonNullable(Map<String, dynamic> json) {
-    TodoRequest response = TodoRequest();
-    if (json.containsKey("title")) {
-      response.title = json["title"];
-    }
-    if (json.containsKey("content")) {
-      response.content = json["content"];
-    }
-    if (json.containsKey("user_id")) {
-      response.userId = json["user_id"];
-    }
-    return response;
-  }
-
   Map<String, dynamic> toJson() =>
       {"title": title, "content": content, "user_id": userId};
 }
 
 class DeleteTodoRequest {
   int id;
-  
+
   DeleteTodoRequest({this.id});
 
-  factory DeleteTodoRequest.fromJson(Map<String, dynamic> json) => new DeleteTodoRequest(
-      id: json["id"]);
+  factory DeleteTodoRequest.fromJson(Map<String, dynamic> json) =>
+      new DeleteTodoRequest(id: json["id"]);
+
+  Map<String, dynamic> toJson() => {"id": id};
+}
+
+class UpdateTodoRequest {
+  int id;
+  String title;
+  String content;
+
+  UpdateTodoRequest({this.id, this.title, this.content});
+
+  factory UpdateTodoRequest.fromJson(Map<String, dynamic> json) =>
+      new UpdateTodoRequest(
+          id: json["id"], title: json["title"], content: json["content"]);
 
   Map<String, dynamic> toJson() =>
-      {"id": id};
+      {"id": id, "title": title, "content": content};
 }

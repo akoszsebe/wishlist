@@ -46,4 +46,17 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
+  Future<bool> updateTodo(UpdateTodoRequest updateTodoRequest) async {
+    try {
+      await dio.post(baseUrl + "/reports/update",
+          data: updateTodoRequest.toJson(),
+          options: Options(contentType: ContentType.parse("application/json")),
+          cancelToken: token);
+      return true;
+    } on DioError catch (e) {
+      print("Exception occured: $e");
+      throw ApiExeption.fromDioError(e);
+    }
+  }
+
 }

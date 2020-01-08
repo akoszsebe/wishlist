@@ -4,11 +4,13 @@ class AppTheme {
   static get darkTheme {
     final originalTextTheme = ThemeData.dark().textTheme;
     final originalBody1 = originalTextTheme.body1;
+    final accentIconTheme = ThemeData.dark().accentIconTheme;
 
     return ThemeData.dark().copyWith(
         primaryColor: Colors.grey[900],
-        accentColor: Colors.cyan[400],
+        accentColor: Colors.cyan[500],
         buttonColor: Colors.grey[900],
+        accentIconTheme: accentIconTheme.copyWith(color: Colors.white),
         textSelectionColor: Colors.cyan[200],
         backgroundColor: Colors.grey[900],
         scaffoldBackgroundColor: Colors.grey[900],
@@ -21,9 +23,11 @@ class AppTheme {
   static get lightTheme {
     final primaryIconTheme = ThemeData.light().primaryIconTheme;
     final primaryTextTheme = ThemeData.light().primaryTextTheme;
+    final accentIconTheme = ThemeData.dark().accentIconTheme;
     return ThemeData.light().copyWith(
       primaryColor: Colors.grey[100],
-      accentColor: Colors.cyan[400],
+      accentColor: Colors.cyan[500],
+      accentIconTheme: accentIconTheme.copyWith(color: Colors.grey[900]),
       primaryTextTheme : primaryTextTheme.apply(bodyColor: Colors.grey[900]),
       scaffoldBackgroundColor: Colors.grey[100],
       primaryIconTheme: primaryIconTheme.copyWith(color: Colors.grey[900]),

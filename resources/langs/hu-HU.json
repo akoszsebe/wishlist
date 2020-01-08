@@ -6,6 +6,12 @@
     "dark" : "Sotet",
     "nodata" : "Nincs tennivalo",
     "addtitle": "Teendo hozzadasa",
+    "updatetodo": "Frissites",
+    "edittitle": "Teendo modositasa",
+    "newTodotite": "cim hozzadasa",
+    "contenttext": "tartalom hozzadasa",
+    "contenttextmin": "A tartalom hosszabb kell legyen mint 2 karakter",
+    "titletextmin": "A Cim hosszabb kell legyen mint 2 karakter",
     "addtodo": "Hozzadas",
     "profile": {
       "reset_password": {

@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:wishlist/src/screens/edit_screen.dart';
 import 'package:wishlist/src/todo_controller.dart';
 import 'package:wishlist/src/screens/add_screen.dart';
 import 'package:wishlist/src/screens/theme_change_screen.dart';
-import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +25,11 @@ class HomeView extends State<HomeScreen> {
     /// Calls the Controller when this one-time 'init' event occurs.
     /// Not revealing the 'business logic' that then fires inside.
     _con.init();
+    _con.addNotificationListener((title, message) {
+      print("itt" + title + " " + message);
+      showFlushBar(title, message);
+      _con.loadData();
+    });
   }
 
   @protected
@@ -89,42 +95,74 @@ class HomeView extends State<HomeScreen> {
                 key: Key(d.id.toString()),
                 title: Text(d.title),
                 subtitle: Text(d.content),
-                trailing: Icon(Icons.more_vert),
+                trailing: IconButton(
+                  icon: Icon(Icons.more_vert),
+                  onPressed: () {
+                    showModalBootomSheet(d);
+                  },
+                ),
                 onLongPress: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext bc) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          color: Theme.of(context).primaryColor,
-                          child: new Wrap(
-                            children: <Widget>[
-                              new ListTile(
-                                  leading: new Icon(Icons.notifications),
-                                  title: new Text('Notify'),
-                                  onTap: () => {}),
-                              new ListTile(
-                                  leading: new Icon(Icons.edit),
-                                  title: new Text('Edit'),
-                                  onTap: () => {}),
-                              new ListTile(
-                                leading: new Icon(Icons.delete),
-                                title: new Text('Delete'),
-                                onTap: () { _con.deleteTodo(d.id); Navigator.pop(context);},
-                              ),
-                            ],
-                          ),
-                        );
-                      });
+                  showModalBootomSheet(d);
                 },
-                onTap: () => {
-                  showAlertDialog(
-                      context, "Item", "content", () => {}, () => {})
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EditScreen(d)));
                 },
               ))
       ],
     );
+  }
+
+  void showFlushBar(String title, String message) {
+    Flushbar(
+      title: title,
+      message: message,
+      duration: Duration(seconds: 3),
+    )..show(context);
+  }
+
+  void showModalBootomSheet(d) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return Container(
+            margin: EdgeInsets.only(left: 8, right: 8),
+            color: Colors.transparent,
+            child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                color: Theme.of(context).primaryColor,
+                child: new Wrap(
+                  children: <Widget>[
+                    new ListTile(
+                        leading: new Icon(Icons.notifications),
+                        title: new Text('Notify'),
+                        onTap: () {
+                          _con.notifyTodo(d.title, d.content);
+                          Navigator.pop(context);
+                        }),
+                    new ListTile(
+                        leading: new Icon(Icons.edit),
+                        title: new Text('Edit'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditScreen(d)));
+                        }),
+                    new ListTile(
+                      leading: new Icon(Icons.delete),
+                      title: new Text('Delete'),
+                      onTap: () {
+                        _con.deleteTodo(d.id);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                )),
+          );
+        });
   }
 }
