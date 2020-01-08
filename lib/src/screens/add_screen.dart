@@ -47,12 +47,12 @@ class _AddScreenState extends State<AddScreen> {
                 autofocus: isEditing ? false : true,
                 style: Theme.of(context).textTheme.headline,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).tr('newTodoHint'),
+                  hintText: AppLocalizations.of(context).tr('newTodotite'),
                 ),
                 onSaved: (value) => _title = value,
                 validator: (String arg) {
                   if (arg.length < 3)
-                    return 'Title must be more than 2 charater';
+                    return AppLocalizations.of(context).tr('titletextmin');
                   else
                     return null;
                 },
@@ -63,12 +63,12 @@ class _AddScreenState extends State<AddScreen> {
                 maxLines: 10,
                 style: Theme.of(context).textTheme.subhead,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).tr('nothint'),
+                  hintText: AppLocalizations.of(context).tr('contenttext'),
                 ),
                 onSaved: (value) => _content = value,
                 validator: (String arg) {
                   if (arg.length < 3)
-                    return 'Content must be more than 2 charater';
+                    return AppLocalizations.of(context).tr('contenttextmin');
                   else
                     return null;
                 },
