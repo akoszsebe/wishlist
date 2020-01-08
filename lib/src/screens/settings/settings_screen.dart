@@ -6,14 +6,14 @@ import 'package:tuple/tuple.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
 
-class ThemeChangerScreen extends StatefulWidget {
-  ThemeChangerScreen({Key key}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  SettingsScreen({Key key}) : super(key: key);
 
   @override
-  _ThemeChangerScreenState createState() => _ThemeChangerScreenState();
+  _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _ThemeChangerScreenState extends State<ThemeChangerScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   var dropdownValue = 'en';
 
   @override

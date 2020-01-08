@@ -1,30 +1,26 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:wishlist/src/networking/response/todo_response.dart';
-import 'package:wishlist/src/todo_controller.dart';
+import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/util/app_keys.dart';
 
-class EditScreen extends StatefulWidget {
-  final TodoResponse todo;
+class AddScreen extends StatefulWidget {
+  final String todoId;
 
-  EditScreen(
-    this.todo, {
+  AddScreen({
     Key key,
+    this.todoId,
   }) : super(key: key ?? AppKeys.addTodoScreen);
 
   @override
-  _EditScreenState createState() => _EditScreenState(todo);
+  _AddScreenState createState() => _AddScreenState();
 }
 
-class _EditScreenState extends State<EditScreen> {
+class _AddScreenState extends State<AddScreen> {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final TodoResponse _todo;
   final TodoController _con = TodoController.con;
   String _title;
   String _content;
-
-  _EditScreenState(this._todo);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +29,7 @@ class _EditScreenState extends State<EditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).tr('edittitle')),
+        title: Text(AppLocalizations.of(context).tr('addtitle')),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -46,8 +42,9 @@ class _EditScreenState extends State<EditScreen> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: _todo.title,
+                initialValue: '',
                 key: AppKeys.taskField,
+                autofocus: isEditing ? false : true,
                 style: Theme.of(context).textTheme.headline,
                 decoration: InputDecoration(
                   hintText: AppLocalizations.of(context).tr('newTodotite'),
@@ -61,7 +58,7 @@ class _EditScreenState extends State<EditScreen> {
                 },
               ),
               TextFormField(
-                initialValue: _todo.content,
+                initialValue: '',
                 key: AppKeys.noteField,
                 maxLines: 10,
                 style: Theme.of(context).textTheme.subhead,
@@ -80,25 +77,29 @@ class _EditScreenState extends State<EditScreen> {
           ),
         ),
       ),
-      floatingActionButton: Container(
+      floatingActionButton: 
+      Container(
           margin: EdgeInsets.only(left: 32),
           height: 60,
-          child: Center(
+          child: 
+          Center(
               child: FloatingActionButton.extended(
             key: AppKeys.saveTodoFab,
             backgroundColor: Theme.of(context).accentColor,
             tooltip: AppLocalizations.of(context).tr('saveChanges'),
-            icon: Icon(Icons.save),
-            label: Text(AppLocalizations.of(context).tr("updatetodo")),
+            icon: Icon(Icons.add),
+            label: Text(AppLocalizations.of(context).tr("addtodo")),
             onPressed: () {
               final form = formKey.currentState;
               if (form.validate()) {
                 form.save();
-                _con.update(_todo.id, _title, _content);
+                _con.saveTodo(_title, _content);
                 Navigator.pop(context);
               }
             },
           ))),
     );
   }
+
+  bool get isEditing => widget.todoId != null;
 }

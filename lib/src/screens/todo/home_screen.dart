@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:wishlist/src/screens/edit_screen.dart';
-import 'package:wishlist/src/todo_controller.dart';
-import 'package:wishlist/src/screens/add_screen.dart';
-import 'package:wishlist/src/screens/theme_change_screen.dart';
+import 'package:wishlist/src/screens/todo/edit_screen.dart';
+import 'package:wishlist/src/screens/todo/todo_controller.dart';
+import 'package:wishlist/src/screens/todo/add_screen.dart';
+import 'package:wishlist/src/screens/settings/settings_screen.dart';
 import 'package:wishlist/util/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -68,7 +68,7 @@ class HomeView extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ThemeChangerScreen()));
+                                builder: (context) => SettingsScreen()));
                       },
                     ),
                   ]),
