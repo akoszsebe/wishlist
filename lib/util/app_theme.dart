@@ -16,7 +16,7 @@ class AppTheme {
         backgroundColor: Colors.grey[900],
         scaffoldBackgroundColor: Colors.grey[900],
         toggleableActiveColor: Colors.cyan[300],
-        textTheme: originalTextTheme.copyWith(
+        textTheme: originalTextTheme.copyWith( 
             body1:
                 originalBody1.copyWith(decorationColor: Colors.transparent)));
   }

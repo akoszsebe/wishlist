@@ -10,7 +10,7 @@ import 'src/App.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]).then((_) {
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top,SystemUiOverlay.bottom]).then((_) {
     SharedPrefs.getTheme().then((onValue) {
       runApp(EasyLocalization(
         child: ChangeNotifierProvider(
