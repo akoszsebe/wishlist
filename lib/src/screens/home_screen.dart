@@ -21,7 +21,6 @@ class HomeView extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
     /// Calls the Controller when this one-time 'init' event occurs.
     /// Not revealing the 'business logic' that then fires inside.
     _con.init();
@@ -115,8 +114,10 @@ class HomeView extends State<HomeScreen> {
 
   void showFlushBar(String title, String message) {
     Flushbar(
-      title: title,
-      message: message,
+      titleText: Text(title),
+      messageText: Text(message),
+      backgroundColor: Theme.of(context).primaryColorLight,
+      icon: Icon(Icons.notifications_active),
       duration: Duration(seconds: 3),
     )..show(context);
   }
@@ -127,7 +128,7 @@ class HomeView extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
           return Container(
-            margin: EdgeInsets.only(left: 8, right: 8),
+            margin: EdgeInsets.only(left: 4, right: 4),
             color: Colors.transparent,
             child: Card(
                 shape: RoundedRectangleBorder(

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
 
 class ThemeChangerScreen extends StatefulWidget {
@@ -41,6 +42,7 @@ class _ThemeChangerScreenState extends State<ThemeChangerScreen> {
                   activeColor: Theme.of(context).accentColor,
                   onChanged: (val) {
                     themeProvider.setThemeData = val;
+                    SharedPrefs.setTheme(val);
                   },
                 ),
               ],

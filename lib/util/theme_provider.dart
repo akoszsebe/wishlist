@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wishlist/util/app_theme.dart';
 
 class ThemeProvider with ChangeNotifier {
-  bool isLightTheme;
+  bool isLightTheme = false;
 
   ThemeProvider({this.isLightTheme});
 
