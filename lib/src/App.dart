@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/login/login_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
@@ -16,7 +15,6 @@ class MVCApp extends AppMVC {
   MVCApp({Key key}) : super(con: _todocontroller,  key: key);
 
   /// An external reference to the Controller if you wish. -gp
-  static final LoginController _controller = LoginController();
   static final TodoController _todocontroller = TodoController();
 
   Widget build(BuildContext context) {

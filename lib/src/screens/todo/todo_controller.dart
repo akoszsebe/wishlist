@@ -1,9 +1,11 @@
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:wishlist/src/datamodels/user_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/util/firebasenotifications.dart';
+import 'package:wishlist/util/shared_prefs.dart';
 
 class TodoController extends ControllerMVC {
   factory TodoController() {
@@ -17,6 +19,7 @@ class TodoController extends ControllerMVC {
   static TodoController get con => _this;
 
   List<TodoResponse> list;
+  UserModel userData = UserModel(photoUrl: "");
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
@@ -28,11 +31,13 @@ class TodoController extends ControllerMVC {
     _firebaseNotifications..setUpFirebase();
     String firebaseDeviceId = await _firebaseNotifications.getToken();
     print(firebaseDeviceId);
-    registerForNotification(firebaseDeviceId, "zsebea@yahoo.com");
+    registerForNotification(firebaseDeviceId, userData.email);
     loadData();
   }
 
   Future<void> loadData() async {
+    userData = await SharedPrefs.getUserData();
+    refresh();
     List<TodoResponse> resopnse =
         await todoApiProvider.getTodos().catchError((error) {
       throw error;

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/add_screen.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final data = _con.list;
+    final userData = _con.userData;
     return Scaffold(
       key: scaffoldKey,
       floatingActionButton: FloatingActionButton(
@@ -62,6 +64,31 @@ class _HomeScreenState extends State<HomeScreen> {
                       background:
                           Container(color: Theme.of(context).primaryColor)),
                   actions: <Widget>[
+                    IconButton(
+                      icon: ClipRRect(
+                          borderRadius: new BorderRadius.circular(16.0),
+                          child: userData.photoUrl == ""
+                              ? Icon(Icons.people)
+                              : Image.network(
+                                  userData.photoUrl,
+                                  fit: BoxFit.contain,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                )),
+                      tooltip: 'Add new entry',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AccountScreen()));
+                      },
+                    ),
                     IconButton(
                       icon: const Icon(Icons.settings),
                       tooltip: 'Add new entry',

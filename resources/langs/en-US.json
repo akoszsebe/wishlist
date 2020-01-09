@@ -12,6 +12,7 @@
     "contenttext": "insert content",
     "contenttextmin": "Content must be more than 2 charater",
     "titletextmin": "Title must be more than 2 charater",
+    "wellcome": "Wellcome in Wishlist app",
     "addtodo": "Add Todo",
     "profile": {
       "reset_password": {

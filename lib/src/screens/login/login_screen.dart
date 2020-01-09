@@ -1,8 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
+import 'package:wishlist/util/buttons/google.dart';
+import 'package:wishlist/util/theme_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @protected
@@ -11,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends StateMVC<LoginScreen> {
-  _LoginScreenState() : super(LoginController()){
+  _LoginScreenState() : super(LoginController()) {
     this._con = controller;
   }
   LoginController _con;
@@ -21,63 +25,62 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _con.init();
-  }
-
-  bool _isLoggedIn = false;
-
-  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-
-  _login() async {
-    try {
-      await _googleSignIn.signIn();
-      setState(() {
-        _isLoggedIn = true;
-      });
-    } catch (err) {
-      print(err);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-    }
-  }
-
-  _logout() {
-    _googleSignIn.signOut();
-    setState(() {
-      _isLoggedIn = false;
-    });
+    _con.checkLogin(() => {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomeScreen()))
+        });
   }
 
   @protected
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: _isLoggedIn
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.network(
-                      _googleSignIn.currentUser.photoUrl,
-                      height: 50.0,
-                      width: 50.0,
-                    ),
-                    Text(_googleSignIn.currentUser.displayName),
-                    OutlineButton(
-                      child: Text("Logout"),
-                      onPressed: () {
-                        _logout();
-                      },
-                    )
-                  ],
-                )
-              : Center(
-                  child: OutlineButton(
-                    child: Text("Login with Google"),
-                    onPressed: () {
-                      _login();
-                    },
-                  ),
-                )),
-    );
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return Scaffold(body: buildBody(themeProvider));
+  }
+
+  Widget buildBody(ThemeProvider themeProvider) {
+    if (_con.logedIn == null) {
+      return CircularProgressIndicator();
+    }
+    print(_con.logedIn);
+    return Center(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+          Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                AppLocalizations.of(context).tr("wellcome"),
+                style: TextStyle(fontSize: 40),
+                textAlign: TextAlign.center,
+              )),
+          Padding(
+            padding: EdgeInsets.only(top: 60),
+          ),
+          GoogleSignInButton(
+            onPressed: () {
+              _con.login((err) {
+                if (err != null) {
+                  showFlushBar("Error", err);
+                } else {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                }
+              });
+            },
+            darkMode: themeProvider.isLightTheme,
+          ),
+        ]));
+  }
+
+  void showFlushBar(String title, String message) {
+    Flushbar(
+      titleText: Text(title),
+      messageText: Text(message),
+      backgroundColor: Colors.red[300],
+      icon: Icon(Icons.warning),
+      duration: Duration(seconds: 5),
+    )..show(context);
   }
 }
