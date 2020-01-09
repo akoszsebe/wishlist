@@ -10,10 +10,10 @@ class TodoApiProvider extends ApiProvider {
   Future<List<TodoResponse>> getTodos() async {
     try {
       Response response = await dio.get(baseUrl + "/reports",
-          options: Options(
-              contentType: ContentType.parse("application/json")),
+          options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
-      return List<TodoResponse>.from(response.data.map((x) => TodoResponse.fromJson(x)));
+      return List<TodoResponse>.from(
+          response.data.map((x) => TodoResponse.fromJson(x)));
     } on DioError catch (e) {
       print("Exception occured: $e");
       throw ApiExeption.fromDioError(e);
@@ -33,7 +33,7 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
-  Future<bool> deleteTodo(DeleteTodoRequest deleteTodoRequest) async{
+  Future<bool> deleteTodo(DeleteTodoRequest deleteTodoRequest) async {
     try {
       await dio.post(baseUrl + "/reports/delete",
           data: deleteTodoRequest.toJson(),
@@ -59,4 +59,16 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
+  Future<bool> updateTodoCategory(int todoId, int category) async {
+    try {
+      await dio.post(baseUrl + "/todo/update/category",
+          data: {"id": todoId, "category": category},
+          options: Options(contentType: ContentType.parse("application/json")),
+          cancelToken: token);
+      return true;
+    } on DioError catch (e) {
+      print("Exception occured: $e");
+      throw ApiExeption.fromDioError(e);
+    }
+  }
 }

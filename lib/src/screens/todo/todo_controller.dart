@@ -19,7 +19,7 @@ class TodoController extends ControllerMVC {
   static TodoController get con => _this;
 
   List<TodoResponse> list;
-  UserModel userData = UserModel(photoUrl: "");
+  UserModel userData;
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
@@ -29,6 +29,8 @@ class TodoController extends ControllerMVC {
   void init() async {
     _firebaseNotifications = new FirebaseNotifications();
     _firebaseNotifications..setUpFirebase();
+    userData = await SharedPrefs.getUserData();
+    refresh();
     String firebaseDeviceId = await _firebaseNotifications.getToken();
     print(firebaseDeviceId);
     registerForNotification(firebaseDeviceId, userData.email);
@@ -36,8 +38,6 @@ class TodoController extends ControllerMVC {
   }
 
   Future<void> loadData() async {
-    userData = await SharedPrefs.getUserData();
-    refresh();
     List<TodoResponse> resopnse =
         await todoApiProvider.getTodos().catchError((error) {
       throw error;
@@ -50,8 +50,8 @@ class TodoController extends ControllerMVC {
   Future<void> saveTodo(String title, String content) async {
     list = null;
     await todoApiProvider
-        .addTodo(TodoRequest(
-            title: title, content: content, userId: userData.email))
+        .addTodo(
+            TodoRequest(title: title, content: content, userId: userData.email))
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
@@ -71,6 +71,13 @@ class TodoController extends ControllerMVC {
     await todoApiProvider
         .updateTodo(UpdateTodoRequest(id: id, title: title, content: content))
         .catchError((error) {
+      throw error;
+    }).then((onValue) => {loadData()});
+  }
+
+  Future<void> updateCategory(int id, int category) async {
+    list = null;
+    await todoApiProvider.updateTodoCategory(id, category).catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
   }

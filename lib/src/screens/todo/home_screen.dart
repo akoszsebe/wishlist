@@ -1,11 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/add_screen.dart';
 import 'package:wishlist/src/screens/settings/settings_screen.dart';
+import 'package:wishlist/util/app_theme.dart';
+import 'package:wishlist/util/theme_provider.dart';
 import 'package:wishlist/util/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -67,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                       icon: ClipRRect(
                           borderRadius: new BorderRadius.circular(16.0),
-                          child: userData.photoUrl == ""
+                          child: userData == null
                               ? Icon(Icons.people)
                               : Image.network(
                                   userData.photoUrl,
@@ -113,33 +116,42 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListView(children: <Widget>[
         Center(child: Text(AppLocalizations.of(context).tr("nodata")))
       ]);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    CardColors cardColors =
+        themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
     return GridView.count(
       crossAxisCount: 2,
       children: <Widget>[
-     // children: <Widget>[
+        // children: <Widget>[
         for (var d in data)
           Padding(
-            padding: EdgeInsets.all(4),
-            child:Card(
-              //padding: EdgeInsets.all(16),
-              child: ListTile(
-                key: Key(d.id.toString()),
-                title: Text(d.title),
-                subtitle: Text(d.content,  overflow: TextOverflow.clip),
-                trailing: IconButton(
-                  icon: Icon(Icons.more_vert),
-                  onPressed: () {
-                    showModalBootomSheet(d);
-                  },
-                ),
-                onLongPress: () {
-                  showModalBootomSheet(d);
-                },
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditScreen(d)));
-                },
-              )))
+              padding: EdgeInsets.all(4),
+              child: Card(
+                  color: colorSelector(d.category, cardColors),
+                  child: ListTile(
+                    key: Key(d.id.toString()),
+                    title: Container(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text(d.title, overflow: TextOverflow.clip)),
+                    subtitle: Container(
+                        padding: const EdgeInsets.only(bottom: 45),
+                        child: Text(d.content, overflow: TextOverflow.clip)),
+                    trailing: IconButton(
+                      icon: Icon(Icons.more_vert),
+                      onPressed: () {
+                        showModalBootomSheet(d,cardColors);
+                      },
+                    ),
+                    onLongPress: () {
+                      showModalBootomSheet(d,cardColors);
+                    },
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditScreen(d)));
+                    },
+                  )))
       ],
     );
   }
@@ -154,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
     )..show(context);
   }
 
-  void showModalBootomSheet(d) {
+  void showModalBootomSheet(d, CardColors cardColors) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -169,10 +181,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: new Wrap(
                   children: <Widget>[
                     new ListTile(
-                        leading: new Icon(Icons.notifications),
-                        title: new Text('Notify'),
+                        leading: new Icon(
+                          Icons.fiber_manual_record,
+                          color: cardColors.color1,
+                        ),
+                        title: new Text('Normal'),
                         onTap: () {
-                          _con.notifyTodo(d.title, d.content);
+                          _con.updateCategory(d.id, 0);
+                          //_con.notifyTodo(d.title, "Updated");
+                          Navigator.pop(context);
+                        }),
+                    new ListTile(
+                        leading: new Icon(
+                          Icons.fiber_manual_record,
+                          color: cardColors.color2,
+                        ),
+                        title: new Text('Less Important'),
+                        onTap: () {
+                          _con.updateCategory(d.id, 1);
+                          //_con.notifyTodo(d.title, "Updated");
+                          Navigator.pop(context);
+                        }),
+                    new ListTile(
+                        leading: new Icon(
+                          Icons.fiber_manual_record,
+                          color: cardColors.color3,
+                        ),
+                        title: new Text('Important'),
+                        onTap: () {
+                          _con.updateCategory(d.id, 2);
+                          //_con.notifyTodo(d.title, "Updated");
                           Navigator.pop(context);
                         }),
                     new ListTile(
@@ -197,5 +235,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 )),
           );
         });
+  }
+
+  Color colorSelector(category, CardColors cardColors) {
+    switch (category) {
+      case 1:
+        return cardColors.color2;
+      case 2:
+        return cardColors.color3;
+      default:
+        return cardColors.color1;
+    }
   }
 }

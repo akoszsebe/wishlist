@@ -2,30 +2,15 @@ class TodoResponse {
   int id;
   String title;
   String content;
+  int category;
   String userId;
 
-  TodoResponse({this.id, this.title, this.content, this.userId});
+  TodoResponse({this.id, this.title, this.content, this.category, this.userId});
 
   factory TodoResponse.fromJson(Map<String, dynamic> json) => new TodoResponse(
       id: json["id"],
       title: json["title"],
       content: json["content"],
+      category: json["category"],
       userId: json["user_id"]);
-
-  factory TodoResponse.fromJsonNullable(Map<String, dynamic> json) {
-    TodoResponse response = TodoResponse();
-    if (json.containsKey("id")) {
-      response.id = json["id"];
-    }
-    if (json.containsKey("title")) {
-      response.title = json["title"];
-    }
-    if (json.containsKey("content")) {
-      response.content = json["content"];
-    }
-    if (json.containsKey("user_id")) {
-      response.userId = json["user_id"];
-    }
-    return response;
-  }
 }
