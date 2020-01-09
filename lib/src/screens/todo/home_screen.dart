@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Normal'),
                         onTap: () {
                           _con.updateCategory(d.id, 0);
-                          //_con.notifyTodo(d.title, "Updated");
+                          _con.notifyTodo(d.title, "Updated Category to Normal");
                           Navigator.pop(context);
                         }),
                     new ListTile(
@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Less Important'),
                         onTap: () {
                           _con.updateCategory(d.id, 1);
-                          //_con.notifyTodo(d.title, "Updated");
+                          _con.notifyTodo(d.title, "Updated Category to Less Important");
                           Navigator.pop(context);
                         }),
                     new ListTile(
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Important'),
                         onTap: () {
                           _con.updateCategory(d.id, 2);
-                          //_con.notifyTodo(d.title, "Updated");
+                          _con.notifyTodo(d.title, "Updated Category to Important");
                           Navigator.pop(context);
                         }),
                     new ListTile(
