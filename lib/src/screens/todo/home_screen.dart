@@ -113,15 +113,19 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListView(children: <Widget>[
         Center(child: Text(AppLocalizations.of(context).tr("nodata")))
       ]);
-    return ListView(
+    return GridView.count(
+      crossAxisCount: 2,
       children: <Widget>[
+     // children: <Widget>[
         for (var d in data)
-          Card(
-              margin: EdgeInsets.all(16),
+          Padding(
+            padding: EdgeInsets.all(4),
+            child:Card(
+              //padding: EdgeInsets.all(16),
               child: ListTile(
                 key: Key(d.id.toString()),
                 title: Text(d.title),
-                subtitle: Text(d.content),
+                subtitle: Text(d.content,  overflow: TextOverflow.clip),
                 trailing: IconButton(
                   icon: Icon(Icons.more_vert),
                   onPressed: () {
@@ -135,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => EditScreen(d)));
                 },
-              ))
+              )))
       ],
     );
   }
