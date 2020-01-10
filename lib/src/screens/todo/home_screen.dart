@@ -131,19 +131,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListTile(
                     key: Key(d.id.toString()),
                     title: Container(
+                        height: 40,
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(d.title, overflow: TextOverflow.clip)),
+                        child: Text(d.title, overflow: TextOverflow.ellipsis)),
                     subtitle: Container(
                         padding: const EdgeInsets.only(bottom: 45),
-                        child: Text(d.content, overflow: TextOverflow.clip)),
+                        child: Text(d.content, overflow: TextOverflow.fade)),
                     trailing: IconButton(
+                      padding: EdgeInsets.all(0),
+                      alignment: Alignment.topRight,
                       icon: Icon(Icons.more_vert),
                       onPressed: () {
-                        showModalBootomSheet(d,cardColors);
+                        showModalBootomSheet(d, cardColors);
                       },
                     ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8),
                     onLongPress: () {
-                      showModalBootomSheet(d,cardColors);
+                      showModalBootomSheet(d, cardColors);
                     },
                     onTap: () {
                       Navigator.push(
@@ -188,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Normal'),
                         onTap: () {
                           _con.updateCategory(d.id, 0);
-                          _con.notifyTodo(d.title, "Updated Category to Normal");
                           Navigator.pop(context);
                         }),
                     new ListTile(
@@ -199,7 +202,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Less Important'),
                         onTap: () {
                           _con.updateCategory(d.id, 1);
-                          _con.notifyTodo(d.title, "Updated Category to Less Important");
                           Navigator.pop(context);
                         }),
                     new ListTile(
@@ -210,7 +212,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Important'),
                         onTap: () {
                           _con.updateCategory(d.id, 2);
-                          _con.notifyTodo(d.title, "Updated Category to Important");
+                          Navigator.pop(context);
+                        }),
+                    new ListTile(
+                        leading: new Icon(Icons.notifications),
+                        title: new Text('Notify'),
+                        onTap: () {
+                          _con.notifyTodo(d.title, d.content);
                           Navigator.pop(context);
                         }),
                     new ListTile(

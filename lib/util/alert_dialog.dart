@@ -52,3 +52,19 @@ void showAlertDialog(BuildContext context, String title, String content,
     },
   );
 }
+
+void showLoaderDialog(BuildContext context) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Container(height: 50, child: Center(child:SizedBox(height: 40,width: 40, child: CircularProgressIndicator())))
+      );
+    },
+  );
+}

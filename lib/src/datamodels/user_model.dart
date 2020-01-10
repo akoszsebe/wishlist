@@ -1,13 +1,13 @@
 class UserModel {
   String displayName;
   String photoUrl;
-  String email;
+  String userId;
 
-  UserModel({this.displayName, this.photoUrl, this.email});
+  UserModel({this.displayName, this.photoUrl, this.userId});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => new UserModel(
-      displayName: json["displayName"], photoUrl: json["photoUrl"], email: json["email"]);
+      displayName: json["displayName"], photoUrl: json["photoUrl"], userId: json["user_id"]);
 
   Map<String, dynamic> toJson() =>
-      {"displayName": displayName, "photoUrl": photoUrl, "email": email};
+      {"displayName": displayName, "photoUrl": photoUrl, "user_id": userId};
 }

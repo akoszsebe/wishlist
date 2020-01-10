@@ -77,7 +77,7 @@ class _AccountScreenState extends StateMVC<AccountScreen> {
                       ),
                     ),
                     Text(
-                      userData.email,
+                      userData.userId,
                       style: TextStyle(
                           fontSize: 25,
                           color: Theme.of(context).accentColor,

@@ -4,6 +4,7 @@ import 'package:wishlist/src/networking/providers/notification_api_provider.dart
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
+import 'package:wishlist/src/repository/session_repository.dart';
 import 'package:wishlist/util/firebasenotifications.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 
@@ -33,7 +34,8 @@ class TodoController extends ControllerMVC {
     refresh();
     String firebaseDeviceId = await _firebaseNotifications.getToken();
     print(firebaseDeviceId);
-    registerForNotification(firebaseDeviceId, userData.email);
+    SessionRepository().setFirebaseDeviceId(firebaseDeviceId);
+    registerForNotification(firebaseDeviceId, userData.userId);
     loadData();
   }
 
@@ -51,7 +53,7 @@ class TodoController extends ControllerMVC {
     list = null;
     await todoApiProvider
         .addTodo(
-            TodoRequest(title: title, content: content, userId: userData.email))
+            TodoRequest(title: title, content: content, userId: userData.userId))
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});

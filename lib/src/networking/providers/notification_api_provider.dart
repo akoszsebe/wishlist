@@ -19,6 +19,19 @@ class NotificationApiProvider extends ApiProvider {
     }
   }
 
+  Future<bool> unregisterFromPushNotification(String deviceToken) async {
+    try {
+      await dio.post(baseUrl + "/notification/unregister",
+          data: { "token": deviceToken },
+          options: Options(contentType: ContentType.parse("application/json")),
+          cancelToken: token);
+      return true;
+    } on DioError catch (e) {
+      print("Exception occured: $e");
+      throw ApiExeption.fromDioError(e);
+    }
+  }
+
   Future<bool> notifyTodo(String title, String message) async {
     try {
       await dio.post(baseUrl + "/reports/notify",

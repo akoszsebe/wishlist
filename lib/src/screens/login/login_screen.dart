@@ -5,6 +5,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
+import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/buttons/google.dart';
 import 'package:wishlist/util/theme_provider.dart';
 
@@ -60,10 +61,13 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
           ),
           GoogleSignInButton(
             onPressed: () {
+              showLoaderDialog(context);
               _con.login((err) {
                 if (err != null) {
+                  Navigator.pop(context);
                   showFlushBar("Error", err);
                 } else {
+                  Navigator.pop(context);
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => HomeScreen()));
                 }
