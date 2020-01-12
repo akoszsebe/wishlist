@@ -20,7 +20,20 @@ class FirebaseNotifications {
       onMessage: (Map<String, dynamic> message) async {
         print('on message $message');
         if (_listener != null) {
-          _listener(message["notification"]["title"],message["notification"]["body"]);
+          _listener(message["data"]["title"],message["data"]["body"]);
+        }
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+        if (_listener != null) {
+          print('not null');
+          _listener(message["data"]["title"],message["data"]["body"]);
+        } else print('not null');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+        if (_listener != null) {
+          _listener(message["data"]["title"],message["data"]["body"]);
         }
       },
     );

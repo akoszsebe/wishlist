@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
@@ -168,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
       icon: Icon(Icons.notifications_active),
       duration: Duration(seconds: 3),
     )..show(context);
+    FlutterRingtonePlayer.playNotification(looping: false);
   }
 
   void showModalBootomSheet(d, CardColors cardColors) {
