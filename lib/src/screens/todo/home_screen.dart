@@ -8,6 +8,7 @@ import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/add_screen.dart';
 import 'package:wishlist/src/screens/settings/settings_screen.dart';
+import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_theme.dart';
 import 'package:wishlist/util/theme_provider.dart';
 import 'package:wishlist/util/widgets.dart';
@@ -30,9 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
     /// Calls the Controller when this one-time 'init' event occurs.
     /// Not revealing the 'business logic' that then fires inside.
     _con.init();
-    _con.addNotificationListener((title, message) {
-      print("itt" + title + " " + message);
-      showFlushBar(title, message);
+    _con.addNotificationListener((data) {
+      print("itt" + data.title + " " + data.content + " " + data.type.toString());
+      showFlushBar(data.title, data.content);
       _con.loadData();
     });
   }
@@ -222,6 +223,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           _con.notifyTodo(d.title, d.content);
                           Navigator.pop(context);
+                        }),
+                    new ListTile(
+                        leading: new Icon(Icons.notifications),
+                        title: new Text('Set Allert'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          showTimePickerDialog(context,"Set Alarm",(dateTime){
+                            print(dateTime);
+                            _con.setAlarm(dateTime);
+                          });
+                          //_con.notifyTodo(d.title, "{ 'alert': }");
+                          
                         }),
                     new ListTile(
                         leading: new Icon(Icons.edit),

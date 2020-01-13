@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:wishlist/src/datamodels/push_notification_model.dart';
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;
@@ -11,7 +11,7 @@ class FirebaseNotifications {
     firebaseCloudMessagingListeners();
   }
 
-  Function(String,String) _listener;
+  Function(PushNotificationModel) _listener;
 
   void firebaseCloudMessagingListeners() {
     if (Platform.isIOS) iOSPermission();
@@ -19,27 +19,32 @@ class FirebaseNotifications {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print('on message $message');
+        var data = PushNotificationModel.fromJsonNullable(message);
+        print(data);
         if (_listener != null) {
-          _listener(message["data"]["title"],message["data"]["body"]);
+          _listener(data);
         }
       },
       onResume: (Map<String, dynamic> message) async {
         print('on resume $message');
+        var data = PushNotificationModel.fromJsonNullable(message);
         if (_listener != null) {
           print('not null');
-          _listener(message["data"]["title"],message["data"]["body"]);
-        } else print('not null');
+           _listener(data);
+        } else
+          print('not null');
       },
       onLaunch: (Map<String, dynamic> message) async {
         print('on launch $message');
+        var data = PushNotificationModel.fromJsonNullable(message);
         if (_listener != null) {
-          _listener(message["data"]["title"],message["data"]["body"]);
+          _listener(data);
         }
       },
     );
   }
 
-  void addListener(Function(String,String) listener) {
+  void addListener(Function(PushNotificationModel) listener) {
     _listener = listener;
   }
 

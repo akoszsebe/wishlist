@@ -44,4 +44,17 @@ class NotificationApiProvider extends ApiProvider {
       throw ApiExeption.fromDioError(e);
     }
   }
+
+    Future<bool> sendAlarm(String title, int when) async {
+    try {
+      await dio.post(baseUrl + "/reports/sendalarm",
+          data: { "title": title, "when": when},
+          options: Options(contentType: ContentType.parse("application/json")),
+          cancelToken: token);
+      return true;
+    } on DioError catch (e) {
+      print("Exception occured: $e");
+      throw ApiExeption.fromDioError(e);
+    }
+  }
 }

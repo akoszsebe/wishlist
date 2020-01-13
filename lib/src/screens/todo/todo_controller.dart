@@ -1,4 +1,8 @@
+import 'dart:isolate';
+
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:wishlist/src/datamodels/push_notification_model.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
@@ -52,8 +56,8 @@ class TodoController extends ControllerMVC {
   Future<void> saveTodo(String title, String content) async {
     list = null;
     await todoApiProvider
-        .addTodo(
-            TodoRequest(title: title, content: content, userId: userData.userId))
+        .addTodo(TodoRequest(
+            title: title, content: content, userId: userData.userId))
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
@@ -102,7 +106,28 @@ class TodoController extends ControllerMVC {
     }).then((onValue) => {loadData()});
   }
 
-  void addNotificationListener(Function(String, String) listener) {
+  void addNotificationListener(Function(PushNotificationModel) listener) {
     _firebaseNotifications.addListener(listener);
+  }
+
+  Future<void> setAlarm(DateTime dateTime) async {
+    var now = DateTime.now();
+    if (dateTime.isAfter(now)) {
+      var datediff = dateTime.difference(now);
+      print(datediff.inSeconds);
+      await AndroidAlarmManager.oneShot(
+          Duration(seconds: datediff.inSeconds), 1, () {
+        final DateTime now = DateTime.now();
+        final int isolateId = Isolate.current.hashCode;
+        print("[$now] Hello, world! isolate=$isolateId");
+      }, alarmClock: true);
+    } else {
+      print("most");
+      await AndroidAlarmManager.periodic(Duration(seconds: 5), 1, () {
+        final DateTime now = DateTime.now();
+        final int isolateId = Isolate.current.hashCode;
+        print("[$now] Hello, world! isolate=$isolateId");
+      },);
+    }
   }
 }
