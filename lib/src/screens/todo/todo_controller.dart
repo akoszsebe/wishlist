@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
@@ -115,19 +114,10 @@ class TodoController extends ControllerMVC {
     if (dateTime.isAfter(now)) {
       var datediff = dateTime.difference(now);
       print(datediff.inSeconds);
-      await AndroidAlarmManager.oneShot(
-          Duration(seconds: datediff.inSeconds), 1, () {
-        final DateTime now = DateTime.now();
-        final int isolateId = Isolate.current.hashCode;
-        print("[$now] Hello, world! isolate=$isolateId");
-      }, alarmClock: true);
+      
     } else {
       print("most");
-      await AndroidAlarmManager.periodic(Duration(seconds: 5), 1, () {
-        final DateTime now = DateTime.now();
-        final int isolateId = Isolate.current.hashCode;
-        print("[$now] Hello, world! isolate=$isolateId");
-      },);
+      
     }
   }
 }
