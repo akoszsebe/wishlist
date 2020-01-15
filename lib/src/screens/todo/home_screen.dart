@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.pop(context);
                           Workmanager.registerOneOffTask("1", "simpleTask",
-                              initialDelay: Duration(seconds: 5));
+                              initialDelay: Duration(seconds: 15));
                           // showTimePickerDialog(context, "Set Alarm",
                           //     (dateTime) {
                           //   print(dateTime);
