@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
@@ -32,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     /// Not revealing the 'business logic' that then fires inside.
     _con.init();
     _con.addNotificationListener((data) {
-      print("itt" + data.title + " " + data.content + " " + data.type.toString());
+      print(
+          "itt" + data.title + " " + data.content + " " + data.type.toString());
       showFlushBar(data.title, data.content);
       _con.loadData();
     });
@@ -113,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildList(var data) {
+    var width = MediaQuery.of(context).size.width / 2 - 8;
     if (data == null) return buildLoader(context);
     if (data.length == 0)
       return ListView(children: <Widget>[
@@ -121,44 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     CardColors cardColors =
         themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
-    return GridView.count(
-      crossAxisCount: 2,
-      children: <Widget>[
-        // children: <Widget>[
-        for (var d in data)
-          Padding(
-              padding: EdgeInsets.all(4),
-              child: Card(
-                  color: colorSelector(d.category, cardColors),
-                  child: ListTile(
-                    key: Key(d.id.toString()),
-                    title: Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(d.title, overflow: TextOverflow.ellipsis)),
-                    subtitle: Container(
-                        padding: const EdgeInsets.only(bottom: 45),
-                        child: Text(d.content, overflow: TextOverflow.fade)),
-                    trailing: IconButton(
-                      padding: EdgeInsets.all(0),
-                      alignment: Alignment.topRight,
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () {
-                        showModalBootomSheet(d, cardColors);
-                      },
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                    onLongPress: () {
-                      showModalBootomSheet(d, cardColors);
-                    },
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditScreen(d)));
-                    },
-                  )))
-      ],
+    return StaggeredGridView.count(
+      crossAxisCount: 4,
+      children: <Widget>[for (var d in data) buildGridItem(d, cardColors)],
+      //Do you need to go somewhere when you tap on this card, wrap using InkWell and add your route
+      staggeredTiles:
+          data.map<StaggeredTile>((item) => StaggeredTile.fit(2)).toList(),
     );
   }
 
@@ -229,12 +200,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Set Allert'),
                         onTap: () {
                           Navigator.pop(context);
-                          showTimePickerDialog(context,"Set Alarm",(dateTime){
+                          showTimePickerDialog(context, "Set Alarm",
+                              (dateTime) {
                             print(dateTime);
                             _con.setAlarm(dateTime);
                           });
                           //_con.notifyTodo(d.title, "{ 'alert': }");
-                          
                         }),
                     new ListTile(
                         leading: new Icon(Icons.edit),
@@ -269,5 +240,39 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         return cardColors.color1;
     }
+  }
+
+  buildGridItem(d, cardColors) {
+    return Padding(
+        padding: EdgeInsets.all(4),
+        child: Container(
+            child: Card(
+                color: colorSelector(d.category, cardColors),
+                child: ListTile(
+                  key: Key(d.id.toString()),
+                  title: Container(
+                      height: 40,
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(d.title, overflow: TextOverflow.ellipsis)),
+                  subtitle: Container(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(d.content, overflow: TextOverflow.fade)),
+                  trailing: IconButton(
+                    padding: EdgeInsets.all(0),
+                    alignment: Alignment.topRight,
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () {
+                      showModalBootomSheet(d, cardColors);
+                    },
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                  onLongPress: () {
+                    showModalBootomSheet(d, cardColors);
+                  },
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => EditScreen(d)));
+                  },
+                ))));
   }
 }
