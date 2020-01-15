@@ -13,6 +13,7 @@ import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_theme.dart';
 import 'package:wishlist/util/theme_provider.dart';
 import 'package:wishlist/util/widgets.dart';
+import 'package:workmanager/workmanager.dart';
 
 class HomeScreen extends StatefulWidget {
   @protected
@@ -200,11 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Set Allert'),
                         onTap: () {
                           Navigator.pop(context);
-                          showTimePickerDialog(context, "Set Alarm",
-                              (dateTime) {
-                            print(dateTime);
-                            _con.setAlarm(dateTime);
-                          });
+                          Workmanager.registerOneOffTask("1", "simpleTask",
+                              initialDelay: Duration(seconds: 5));
+                          // showTimePickerDialog(context, "Set Alarm",
+                          //     (dateTime) {
+                          //   print(dateTime);
+                          //   _con.setAlarm(dateTime);
+                          // });
                           //_con.notifyTodo(d.title, "{ 'alert': }");
                         }),
                     new ListTile(
