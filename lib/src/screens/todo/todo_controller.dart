@@ -1,12 +1,7 @@
-import 'dart:isolate';
 import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
-import 'package:wishlist/src/datamodels/reveived_notification.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
@@ -36,11 +31,6 @@ class TodoController extends ControllerMVC {
   FirebaseNotifications _firebaseNotifications;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
-    BehaviorSubject<ReceivedNotification>();
-
-final BehaviorSubject<String> selectNotificationSubject =
-    BehaviorSubject<String>();
 
   void init() async {
     _firebaseNotifications = new FirebaseNotifications();
@@ -57,21 +47,10 @@ final BehaviorSubject<String> selectNotificationSubject =
 
   Future<void> initNotifSettings() async {
   var initializationSettingsAndroid = AndroidInitializationSettings('launcher_icon');
-  var initializationSettingsIOS = IOSInitializationSettings(
-      onDidReceiveLocalNotification:
-          (int id, String title, String body, String payload) async {
-    didReceiveLocalNotificationSubject.add(ReceivedNotification(
-        id: id, title: title, body: body, payload: payload));
-  });
+  var initializationSettingsIOS = IOSInitializationSettings();
   var initializationSettings = InitializationSettings(
       initializationSettingsAndroid, initializationSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (String payload) async {
-    if (payload != null) {
-      print('notification payload: ' + payload);
-    }
-    selectNotificationSubject.add(payload);
-  });
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
   Future<void> loadData() async {

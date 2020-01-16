@@ -31,73 +31,92 @@ class _AddScreenState extends State<AddScreen> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).tr('addtitle')),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          autovalidate: false,
-          onWillPop: () {
-            return Future(() => true);
-          },
-          child: ListView(
-            children: [
-              TextFormField(
-                initialValue: '',
-                key: AppKeys.taskField,
-                autofocus: isEditing ? false : true,
-                style: Theme.of(context).textTheme.headline,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).tr('newTodotite'),
-                ),
-                onSaved: (value) => _title = value,
-                validator: (String arg) {
-                  if (arg.length < 3)
-                    return AppLocalizations.of(context).tr('titletextmin');
-                  else
-                    return null;
-                },
-              ),
-              TextFormField(
-                initialValue: '',
-                key: AppKeys.noteField,
-                maxLines: 10,
-                style: Theme.of(context).textTheme.subhead,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).tr('contenttext'),
-                ),
-                onSaved: (value) => _content = value,
-                validator: (String arg) {
-                  if (arg.length < 3)
-                    return AppLocalizations.of(context).tr('contenttextmin');
-                  else
-                    return null;
-                },
-              )
-            ],
-          ),
+      body: Form(
+        key: formKey,
+        autovalidate: false,
+        onWillPop: () {
+          return Future(() => true);
+        },
+        child: ListView(
+          children: [
+            Padding(
+                padding: EdgeInsets.all(16),
+                child: Container(
+                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                  decoration: new BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: new BorderRadius.circular(12.0)),
+                  child: TextFormField(
+                    initialValue: "",
+                    key: AppKeys.taskField,
+                    style: Theme.of(context).textTheme.headline,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText:
+                            AppLocalizations.of(context).tr('newTodotite'),
+                        contentPadding: EdgeInsets.all(16),
+                        labelText: AppLocalizations.of(context).tr('todotite')),
+                    cursorColor: Theme.of(context).accentColor,
+                    onSaved: (value) => _title = value,
+                    validator: (String arg) {
+                      if (arg.length < 3)
+                        return AppLocalizations.of(context).tr('titletextmin');
+                      else
+                        return null;
+                    },
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Container(
+                    padding: EdgeInsets.only(top: 16, bottom: 16),
+                    decoration: new BoxDecoration(
+                        color: Theme.of(context).primaryColorLight,
+                        borderRadius: new BorderRadius.circular(12.0)),
+                    child: TextFormField(
+                      initialValue: '',
+                      key: AppKeys.noteField,
+                      maxLines: 15,
+                      style: Theme.of(context).textTheme.subhead,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText:
+                              AppLocalizations.of(context).tr('contenttext'),
+                          contentPadding: EdgeInsets.all(16),
+                          labelText:
+                              AppLocalizations.of(context).tr('content')),
+                      cursorColor: Theme.of(context).accentColor,
+                      onSaved: (value) => _content = value,
+                      validator: (String arg) {
+                        if (arg.length < 3)
+                          return AppLocalizations.of(context)
+                              .tr('contenttextmin');
+                        else
+                          return null;
+                      },
+                    ))),
+            Container(
+                margin: EdgeInsets.only(bottom: 16),
+                height: 60,
+                child: Center(
+                    child: FloatingActionButton.extended(
+                  key: AppKeys.saveTodoFab,
+                  backgroundColor: Theme.of(context).accentColor,
+                  tooltip: AppLocalizations.of(context).tr('saveChanges'),
+                  icon: Icon(Icons.add),
+                  label: Text(AppLocalizations.of(context).tr("addtodo")),
+                  onPressed: () {
+                    final form = formKey.currentState;
+                    if (form.validate()) {
+                      form.save();
+                      _con.saveTodo(_title, _content);
+                      Navigator.pop(context);
+                    }
+                  },
+                ))),
+          ],
         ),
       ),
-      floatingActionButton: 
-      Container(
-          margin: EdgeInsets.only(left: 32),
-          height: 60,
-          child: 
-          Center(
-              child: FloatingActionButton.extended(
-            key: AppKeys.saveTodoFab,
-            backgroundColor: Theme.of(context).accentColor,
-            tooltip: AppLocalizations.of(context).tr('saveChanges'),
-            icon: Icon(Icons.add),
-            label: Text(AppLocalizations.of(context).tr("addtodo")),
-            onPressed: () {
-              final form = formKey.currentState;
-              if (form.validate()) {
-                form.save();
-                _con.saveTodo(_title, _content);
-                Navigator.pop(context);
-              }
-            },
-          ))),
     );
   }
 
