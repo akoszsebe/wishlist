@@ -1,7 +1,12 @@
 import 'dart:isolate';
+import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
+import 'package:wishlist/src/datamodels/reveived_notification.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
@@ -29,6 +34,13 @@ class TodoController extends ControllerMVC {
   final NotificationApiProvider notificationApiProvider =
       NotificationApiProvider();
   FirebaseNotifications _firebaseNotifications;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
+    BehaviorSubject<ReceivedNotification>();
+
+final BehaviorSubject<String> selectNotificationSubject =
+    BehaviorSubject<String>();
 
   void init() async {
     _firebaseNotifications = new FirebaseNotifications();
@@ -40,7 +52,27 @@ class TodoController extends ControllerMVC {
     SessionRepository().setFirebaseDeviceId(firebaseDeviceId);
     registerForNotification(firebaseDeviceId, userData.userId);
     loadData();
+    initNotifSettings();
   }
+
+  Future<void> initNotifSettings() async {
+  var initializationSettingsAndroid = AndroidInitializationSettings('launcher_icon');
+  var initializationSettingsIOS = IOSInitializationSettings(
+      onDidReceiveLocalNotification:
+          (int id, String title, String body, String payload) async {
+    didReceiveLocalNotificationSubject.add(ReceivedNotification(
+        id: id, title: title, body: body, payload: payload));
+  });
+  var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+    if (payload != null) {
+      print('notification payload: ' + payload);
+    }
+    selectNotificationSubject.add(payload);
+  });
+}
 
   Future<void> loadData() async {
     List<TodoResponse> resopnse =
@@ -109,15 +141,28 @@ class TodoController extends ControllerMVC {
     _firebaseNotifications.addListener(listener);
   }
 
-  Future<void> setAlarm(DateTime dateTime) async {
-    var now = DateTime.now();
-    if (dateTime.isAfter(now)) {
-      var datediff = dateTime.difference(now);
-      print(datediff.inSeconds);
-      
-    } else {
-      print("most");
-      
-    }
+  void sendLocalNot(DateTime when,int id, String title, String content){
+    _scheduleNotification(when,id, title,content);
+  }
+
+  Future<void> _scheduleNotification(DateTime scheduledNotificationDateTime,int id, String title, String content) async {
+    var vibrationPattern = Int64List(4);
+    vibrationPattern[0] = 0;
+    vibrationPattern[1] = 1000;
+    vibrationPattern[2] = 5000;
+    vibrationPattern[3] = 2000;
+
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        id,
+        title,
+        content,
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
   }
 }

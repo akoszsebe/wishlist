@@ -13,7 +13,6 @@ import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_theme.dart';
 import 'package:wishlist/util/theme_provider.dart';
 import 'package:wishlist/util/widgets.dart';
-import 'package:workmanager/workmanager.dart';
 
 class HomeScreen extends StatefulWidget {
   @protected
@@ -116,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildList(var data) {
-    var width = MediaQuery.of(context).size.width / 2 - 8;
     if (data == null) return buildLoader(context);
     if (data.length == 0)
       return ListView(children: <Widget>[
@@ -191,23 +189,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                     new ListTile(
                         leading: new Icon(Icons.notifications),
-                        title: new Text('Notify'),
+                        title: new Text('Notify Everybody'),
                         onTap: () {
                           _con.notifyTodo(d.title, d.content);
                           Navigator.pop(context);
                         }),
                     new ListTile(
                         leading: new Icon(Icons.notifications),
-                        title: new Text('Set Allert'),
-                        onTap: () {
+                        title: new Text('Set Alarm for you'),
+                        onTap: () async {
                           Navigator.pop(context);
-                          Workmanager.registerOneOffTask("1", "simpleTask",
-                              initialDelay: Duration(seconds: 15));
-                          // showTimePickerDialog(context, "Set Alarm",
-                          //     (dateTime) {
-                          //   print(dateTime);
-                          //   _con.setAlarm(dateTime);
-                          // });
+                          //FlutterRingtonePlayer.stop();
+                          showTimePickerDialog(context, "Set Alarm",
+                              (dateTime) {
+                            print(dateTime);
+                            _con.sendLocalNot(dateTime,d.id,"Alarm", d.title);
+                          });
                           //_con.notifyTodo(d.title, "{ 'alert': }");
                         }),
                     new ListTile(
@@ -233,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
+
 
   Color colorSelector(category, CardColors cardColors) {
     switch (category) {
