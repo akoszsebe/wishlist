@@ -132,8 +132,8 @@ class TodoController extends ControllerMVC {
     vibrationPattern[3] = 2000;
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+        'your channel id', 'your channel name', 'your channel description',vibrationPattern: vibrationPattern,
+        importance: Importance.High, priority: Priority.High, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);

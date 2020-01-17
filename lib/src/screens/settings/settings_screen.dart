@@ -25,30 +25,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).tr('settings')),
+        elevation: 2,
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.brightness_3,
+                color: themeProvider.isLightTheme
+                    ? Colors.grey[400]
+                    : Colors.yellow[600],
+              ),
+              Switch(
+                value: themeProvider.isLightTheme,
+                activeColor: Colors.grey[400],
+                inactiveThumbColor: Colors.yellow[600],
+                inactiveTrackColor: Colors.yellow[200],
+                onChanged: (val) {
+                  themeProvider.setThemeData = val;
+                  SharedPrefs.setTheme(val);
+                },
+              ),
+              Icon(
+                Icons.wb_sunny,
+                color: themeProvider.isLightTheme
+                    ? Colors.yellow[600]
+                    : Colors.grey[400],
+              ),
+               Padding(
+                padding: EdgeInsets.only(left: 16),
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView(
         children: <Widget>[
           Container(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                ),
-                Text(themeProvider.isLightTheme
-                    ? AppLocalizations.of(context).tr('light')
-                    : AppLocalizations.of(context).tr('dark')),
-                Switch(
-                  value: themeProvider.isLightTheme,
-                  activeColor: Theme.of(context).accentColor,
-                  onChanged: (val) {
-                    themeProvider.setThemeData = val;
-                    SharedPrefs.setTheme(val);
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
+            padding: EdgeInsets.only(top: 16),
             child: Row(
               children: <Widget>[
                 Padding(

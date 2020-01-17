@@ -30,6 +30,7 @@ class _AddScreenState extends State<AddScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).tr('addtitle')),
+        elevation: 2,
       ),
       body: Form(
         key: formKey,

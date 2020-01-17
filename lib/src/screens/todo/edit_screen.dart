@@ -34,6 +34,7 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).tr('edittitle')),
+        elevation: 2,
       ),
       body: Form(
         key: formKey,
