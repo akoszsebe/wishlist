@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
@@ -8,6 +9,7 @@ import 'package:wishlist/src/repository/session_repository.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 
 class LoginController extends ControllerMVC {
+  static const platform = const MethodChannel('samples.flutter.dev/battery');
   factory LoginController() {
     if (_this == null) _this = LoginController._();
     return _this;
@@ -37,6 +39,29 @@ class LoginController extends ControllerMVC {
       return;
     }
     refresh();
+  }
+
+  void checkIfStartedForAlarm(Function(bool, String) callback) async {
+    try {
+      final String result = await platform.invokeMethod('getIntentParams');
+      print(result);
+      if (result.startsWith("alarm")) {
+        turnOnScreen();
+        callback(true, result);
+      } else
+        callback(false, "");
+    } on PlatformException catch (e) {
+      print(e.message);
+      callback(false, "");
+    }
+    refresh();
+  }
+
+  void turnOnScreen() async {
+    const platform = const MethodChannel('samples.flutter.dev/battery');
+    try {
+      await platform.invokeMethod('wakeUpScreen');
+    } on PlatformException catch (e) {}
   }
 
   void login(Function(String) callback) async {

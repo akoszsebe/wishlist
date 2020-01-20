@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
@@ -24,13 +23,12 @@ class TodoController extends ControllerMVC {
 
   List<TodoResponse> list;
   UserModel userData;
+  static const platform = const MethodChannel('samples.flutter.dev/battery');
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
       NotificationApiProvider();
   FirebaseNotifications _firebaseNotifications;
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
   void init() async {
     _firebaseNotifications = new FirebaseNotifications();
@@ -42,16 +40,8 @@ class TodoController extends ControllerMVC {
     SessionRepository().setFirebaseDeviceId(firebaseDeviceId);
     registerForNotification(firebaseDeviceId, userData.userId);
     loadData();
-    initNotifSettings();
   }
 
-  Future<void> initNotifSettings() async {
-  var initializationSettingsAndroid = AndroidInitializationSettings('launcher_icon');
-  var initializationSettingsIOS = IOSInitializationSettings();
-  var initializationSettings = InitializationSettings(
-      initializationSettingsAndroid, initializationSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
 
   Future<void> loadData() async {
     List<TodoResponse> resopnse =
@@ -120,28 +110,19 @@ class TodoController extends ControllerMVC {
     _firebaseNotifications.addListener(listener);
   }
 
-  void sendLocalNot(DateTime when,int id, String title, String content){
-    _scheduleNotification(when,id, title,content);
+  void sendLocalNot(DateTime when, int id, String title) {
+    _scheduleNotification(when, id, title);
   }
 
-  Future<void> _scheduleNotification(DateTime scheduledNotificationDateTime,int id, String title, String content) async {
-    var vibrationPattern = Int64List(4);
-    vibrationPattern[0] = 0;
-    vibrationPattern[1] = 1000;
-    vibrationPattern[2] = 5000;
-    vibrationPattern[3] = 2000;
-
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',vibrationPattern: vibrationPattern,
-        importance: Importance.High, priority: Priority.High, ticker: 'ticker');
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.schedule(
-        id,
-        title,
-        content,
-        scheduledNotificationDateTime,
-        platformChannelSpecifics);
+  Future<void> _scheduleNotification(DateTime scheduledNotificationDateTime,
+      int id, String title) async {
+    try {
+      final bool result =
+          await platform.invokeMethod('setAlarm', <String, dynamic>{
+        'time': scheduledNotificationDateTime.millisecondsSinceEpoch,
+        'id' : id,
+        'title': title,
+      });
+    } on PlatformException catch (e) {}
   }
 }

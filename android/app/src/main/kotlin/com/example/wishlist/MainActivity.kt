@@ -18,6 +18,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.app.PendingIntent
 import android.os.SystemClock
+import android.view.WindowManager
 
 
 
@@ -32,43 +33,47 @@ class MainActivity: FlutterActivity() {
                 .setMethodCallHandler(
                         { call, result ->
                             if (call.method.equals("setAlarm")) {
-                                var time : Int? = call.argument("time");
-                                println("itt  getbatery "+ time)
-                                setAlarm(time!!);
+                                var time : Long? = call.argument("time");
+                                var id : Int? = call.argument("id");
+                                var title : String? = call.argument("title");
+                                setAlarm(time!!, id!!, title!!);
                                 result.success(true);
+                            } else if (call.method.equals("getIntentParams")) {
+                                val resultt:String = intent.getStringExtra("needAlarm") ?: "default";
+                                val title:String = intent.getStringExtra("title") ?: "";
+                                intent.removeExtra("needAlarm");
+                                println(resultt + title);
+                                result.success(resultt + ":" + title);
                             } else {
                                 result.notImplemented()
                             }
                         }
                 )
+        val result :String = intent.getStringExtra("needAlarm") ?: "default";
+        if (result.startsWith("alarm")){
+            unlockScreen()
+            setTurnScreenOn(true)
+            setShowWhenLocked(true)
+        }
     }
 
-    private fun setAlarm(time : Int){
+    private fun unlockScreen() {
+        val window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+    }
+
+    private fun setAlarm(time : Long, id : Int, title : String){
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var intent = Intent(context, SampleBootReceiver::class.java)
+        intent.putExtra("title", title);
         alarmIntent =  PendingIntent.getBroadcast(context, 0, intent, 0)
-
-        println("system itt  set mak "+ SystemClock.elapsedRealtime())
-        var ido = SystemClock.elapsedRealtime() + time;
-        println("itt  set mak "+ ido)
+        println("set alarm for  "+ time)
         alarmMgr?.set(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                ido,
+                AlarmManager.RTC_WAKEUP,
+                time,
                 alarmIntent
         )
-        println("itt  set utan mak ")
-    }
-
-    private fun getBatteryLevel(): Int {
-        var batteryLevel = -1
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            val batteryManager = getSystemService(BATTERY_SERVICE) as BatteryManager
-            batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-        } else {
-            val intent = ContextWrapper(getApplicationContext()).registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            batteryLevel = intent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100 / intent!!.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-        }
-
-        return batteryLevel
     }
 }

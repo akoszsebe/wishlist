@@ -199,13 +199,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: new Text('Set Alarm for you'),
                         onTap: () async {
                           Navigator.pop(context);
-                          //FlutterRingtonePlayer.stop();
                           showTimePickerDialog(context, "Set Alarm",
                               (dateTime) {
                             print(dateTime);
-                            _con.sendLocalNot(dateTime,d.id,"Alarm", d.title);
+                            _con.sendLocalNot(dateTime,d.id, d.title);
                           });
-                          //_con.notifyTodo(d.title, "{ 'alert': }");
                         }),
                     new ListTile(
                         leading: new Icon(Icons.edit),
@@ -225,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.pop(context);
                       },
                     ),
+                    Padding(padding: EdgeInsets.only(top:8),)
                   ],
                 )),
           );

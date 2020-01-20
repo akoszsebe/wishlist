@@ -22,7 +22,7 @@ class MVCApp extends AppMVC {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'mvc example',
+      title: 'wishlist',
       theme: themeProvider.getThemeData,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

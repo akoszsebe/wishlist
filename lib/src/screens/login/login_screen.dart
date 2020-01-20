@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
+import 'package:wishlist/src/screens/login/alarm_screen.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
@@ -26,10 +28,21 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _con.checkLogin(() => {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeScreen()))
-        });
+    init();
+  }
+
+  void init() {
+    _con.checkIfStartedForAlarm((alarm,title) {
+      if (alarm) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen(title)));
+      } else {
+        _con.checkLogin(() => {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomeScreen()))
+            });
+      }
+    });
   }
 
   @protected
@@ -41,7 +54,7 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
 
   Widget buildBody(ThemeProvider themeProvider) {
     if (_con.logedIn == null) {
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator());
     }
     print(_con.logedIn);
     return Center(

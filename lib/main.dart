@@ -6,7 +6,6 @@ import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
 
 void main(List<String> args) {
-  print("Args " + args.toString());
   WidgetsFlutterBinding.ensureInitialized();
   SharedPrefs.getTheme().then((onValue) {
     runApp(EasyLocalization(

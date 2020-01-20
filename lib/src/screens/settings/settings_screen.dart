@@ -5,8 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
-import 'package:flutter/services.dart';
-
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -17,25 +15,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   var dropdownValue = 'en';
-
-  static const platform = const MethodChannel('samples.flutter.dev/battery');
-  String _batteryLevel = 'Unknown battery level.';
-
-  Future<void> _getBatteryLevel() async {
-    String batteryLevel;
-    try {
-      final bool result = await platform.invokeMethod('setAlarm',<String, dynamic>{
-        'time': 5000,
-      });
-      batteryLevel = 'Battery level at $result % .';
-    } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
-    }
-
-    setState(() {
-      _batteryLevel = batteryLevel;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,11 +107,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer."),
           ),
-          RaisedButton(
-            child: Text('Get Battery Level'),
-            onPressed: _getBatteryLevel,
-          ),
-          Text(_batteryLevel),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
