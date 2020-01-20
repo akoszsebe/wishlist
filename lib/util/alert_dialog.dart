@@ -77,7 +77,7 @@ void showLoaderDialog(BuildContext context) {
 
 void showTimePickerDialog(
     BuildContext context, String title, Function(DateTime) onOK) {
-      var _dateTime = DateTime.now();
+  var _dateTime =  DateTime.now();
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -102,6 +102,8 @@ void showTimePickerDialog(
                   itemTextStyle: TextStyle(color: Theme.of(context).textTheme.display1.color)
                 ),
             onChange: (dateTime, selectedIndex) {
+              dateTime = DateTime(dateTime.year, dateTime.month,dateTime.day,dateTime.hour,dateTime.minute);
+              print(dateTime);
                 _dateTime = dateTime;
             },
           ),

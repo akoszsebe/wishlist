@@ -201,7 +201,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.pop(context);
                           showTimePickerDialog(context, "Set Alarm",
                               (dateTime) {
-                            print(dateTime);
                             _con.sendLocalNot(dateTime,d.id, d.title);
                           });
                         }),

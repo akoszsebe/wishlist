@@ -20,8 +20,12 @@ import android.content.Context
 import android.app.PendingIntent
 import android.os.SystemClock
 import android.view.WindowManager
-
-
+import android.app.KeyguardManager
+import android.os.PowerManager
+import android.os.PowerManager.WakeLock
+import android.content.Context.POWER_SERVICE
+import android.app.KeyguardManager.KeyguardLock
+import android.content.Context.KEYGUARD_SERVICE
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "samples.flutter.dev/battery"
@@ -54,10 +58,28 @@ class MainActivity: FlutterActivity() {
                 )
         val result :String = intent.getStringExtra("needAlarm") ?: "default";
         if (result.startsWith("alarm")){
+            val pm = getApplicationContext().getSystemService(Context.POWER_SERVICE) as PowerManager
+            val wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.FULL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG")
+            wakeLock.acquire()
             unlockScreen()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                 setTurnScreenOn(true)
                 setShowWhenLocked(true)
+                (getSystemService(KeyguardManager::class.java) as KeyguardManager).requestDismissKeyguard(this,
+                        object : KeyguardManager.KeyguardDismissCallback() {
+                            override fun onDismissCancelled() {
+                                println("Keyguard" + "Cancelled")
+                            }
+
+                            override fun onDismissError() {
+                                println("Keyguard" + "Error")
+                            }
+
+                            override fun onDismissSucceeded() {
+                                println("Keyguard" + "Success")
+                            }
+                        }
+                )
             }
         }
     }
@@ -67,6 +89,7 @@ class MainActivity: FlutterActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun setAlarm(time : Long, id : Int, title : String){
