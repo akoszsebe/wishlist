@@ -14,6 +14,7 @@ import android.content.ContextWrapper
 import android.content.Context.BATTERY_SERVICE
 import android.os.Build.VERSION_CODES
 import android.os.Build.VERSION
+import android.os.Build
 import android.app.AlarmManager
 import android.content.Context
 import android.app.PendingIntent
@@ -44,6 +45,8 @@ class MainActivity: FlutterActivity() {
                                 intent.removeExtra("needAlarm");
                                 println(resultt + title);
                                 result.success(resultt + ":" + title);
+                            } else if (call.method.equals("finishAndRemoveTask")) { 
+                                finishAndRemoveTask();
                             } else {
                                 result.notImplemented()
                             }
@@ -52,8 +55,10 @@ class MainActivity: FlutterActivity() {
         val result :String = intent.getStringExtra("needAlarm") ?: "default";
         if (result.startsWith("alarm")){
             unlockScreen()
-            setTurnScreenOn(true)
-            setShowWhenLocked(true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                setTurnScreenOn(true)
+                setShowWhenLocked(true)
+            }
         }
     }
 

@@ -32,6 +32,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
     FlutterRingtonePlayer.playAlarm();
   }
 
+  static const platform = const MethodChannel('samples.flutter.dev/battery');
   @protected
   @override
   Widget build(BuildContext context) {
@@ -42,16 +43,23 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
       floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 60),
           child: ButtonTheme(
-            height: 140,
-            minWidth: 140,
+              height: 140,
+              minWidth: 140,
               child: RaisedButton(
-                  child: Text("Stop",style: TextStyle(
-                fontSize: 20,
-              ),),
+                  child: Text(
+                    "Stop",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                   color: Theme.of(context).accentColor,
-                  onPressed: () {
+                  onPressed: () async {
                     FlutterRingtonePlayer.stop();
-                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                    try {
+                      await platform
+                          .invokeMethod('finishAndRemoveTask');
+                    } on PlatformException catch (e) {}
+                    //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(70.0))))),
