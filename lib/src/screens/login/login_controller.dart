@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
+import 'package:wishlist/src/datamodels/alarm_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/user_api_provider.dart';
 import 'package:wishlist/src/repository/session_repository.dart';
@@ -41,18 +44,19 @@ class LoginController extends ControllerMVC {
     refresh();
   }
 
-  void checkIfStartedForAlarm(Function(bool, String) callback) async {
+  void checkIfStartedForAlarm(Function(bool,AlarmModel) callback) async {
     try {
       final String result = await platform.invokeMethod('getIntentParams');
-      print(result);
-      if (result.startsWith("alarm")) {
+      var alarmResult= AlarmModel.fromJson(jsonDecode(result));
+      print(alarmResult.toJson());
+      if (alarmResult.alarm == "alarm") {
         turnOnScreen();
-        callback(true, result);
+        callback(true, alarmResult);
       } else
-        callback(false, "");
+        callback(false, alarmResult);
     } on PlatformException catch (e) {
       print(e.message);
-      callback(false, "");
+      callback(false, null);
     }
     refresh();
   }
@@ -61,7 +65,7 @@ class LoginController extends ControllerMVC {
     const platform = const MethodChannel('samples.flutter.dev/battery');
     try {
       await platform.invokeMethod('wakeUpScreen');
-    } on PlatformException catch (e) {}
+    } on PlatformException catch (e) { print(e);}
   }
 
   void login(Function(String) callback) async {

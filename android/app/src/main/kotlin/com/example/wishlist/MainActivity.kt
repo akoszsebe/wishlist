@@ -46,9 +46,10 @@ class MainActivity: FlutterActivity() {
                             } else if (call.method.equals("getIntentParams")) {
                                 val resultt:String = intent.getStringExtra("needAlarm") ?: "default";
                                 val title:String = intent.getStringExtra("title") ?: "";
+                                val id:Int = intent.getIntExtra("id",0);
                                 intent.removeExtra("needAlarm");
                                 println(resultt + title);
-                                result.success(resultt + ":" + title);
+                                result.success("{ \"alarm\" : \"" + resultt + "\", \"title\" : \"" + title + "\", \"id\" : " + id + " }");
                             } else if (call.method.equals("finishAndRemoveTask")) { 
                                 finishAndRemoveTask();
                             } else {
@@ -96,7 +97,7 @@ class MainActivity: FlutterActivity() {
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var intent = Intent(context, SampleBootReceiver::class.java)
         intent.putExtra("title", title);
-        alarmIntent =  PendingIntent.getBroadcast(context, 0, intent, 0)
+        alarmIntent =  PendingIntent.getBroadcast(context, id, intent, 0)
         println("set alarm for  "+ time)
         alarmMgr?.set(
                 AlarmManager.RTC_WAKEUP,

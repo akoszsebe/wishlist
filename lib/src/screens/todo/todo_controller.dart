@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
@@ -9,6 +8,7 @@ import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/repository/session_repository.dart';
 import 'package:wishlist/util/firebasenotifications.dart';
 import 'package:wishlist/util/shared_prefs.dart';
+import 'package:wishlist/util/alarm_manager.dart';
 
 class TodoController extends ControllerMVC {
   factory TodoController() {
@@ -23,8 +23,7 @@ class TodoController extends ControllerMVC {
 
   List<TodoResponse> list;
   UserModel userData;
-  static const platform = const MethodChannel('samples.flutter.dev/battery');
-
+  
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
       NotificationApiProvider();
@@ -111,18 +110,8 @@ class TodoController extends ControllerMVC {
   }
 
   void sendLocalNot(DateTime when, int id, String title) {
-    _scheduleNotification(when, id, title);
+    scheduleNotification(when, id, title);
   }
 
-  Future<void> _scheduleNotification(DateTime scheduledNotificationDateTime,
-      int id, String title) async {
-    try {
-      final bool result =
-          await platform.invokeMethod('setAlarm', <String, dynamic>{
-        'time': scheduledNotificationDateTime.millisecondsSinceEpoch,
-        'id' : id,
-        'title': title,
-      });
-    } on PlatformException catch (e) {}
-  }
+  
 }

@@ -1,7 +1,7 @@
+import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/alarm_screen.dart';
@@ -32,18 +32,19 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
   }
 
   void init() {
-    _con.checkIfStartedForAlarm((alarm,title) {
-       Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen("title:cim")));
-      // if (alarm) {
-      //   Navigator.of(context)
-      //       .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen(title)));
-      // } else {
-      //   _con.checkLogin(() => {
-      //         Navigator.of(context).pushReplacement(
-      //             MaterialPageRoute(builder: (context) => HomeScreen()))
-      //       });
-      // }
+    _con.checkIfStartedForAlarm((alarm,alarmResult) {
+      //var rng = new Random();
+      // Navigator.of(context)
+      //       .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen("title:Menjek enni",rng.nextInt(1000000))));
+      if (alarm) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen(alarmResult.title,alarmResult.id)));
+      } else {
+        _con.checkLogin(() => {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomeScreen()))
+            });
+      }
     });
   }
 

@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/util/alarm_manager.dart';
 
 class AlarmScreen extends StatefulWidget {
-  String title;
+  final String title;
+  final int id;
 
-  AlarmScreen(this.title);
+  AlarmScreen(this.title, this.id);
   @protected
   @override
-  createState() => _AlarmScreenState(title);
+  createState() => _AlarmScreenState(title, id);
 }
 
 class _AlarmScreenState extends StateMVC<AlarmScreen> {
   String title = "";
+  int id;
 
-  _AlarmScreenState(this.title) : super(LoginController()) {
+  _AlarmScreenState(this.title, this.id) : super(LoginController()) {
     this._con = controller;
   }
   LoginController _con;
@@ -31,168 +35,151 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
   @override
   void initState() {
     super.initState();
+    now = new DateTime.now();
     _con.init();
-    //FlutterRingtonePlayer.playAlarm();
+    FlutterRingtonePlayer.playAlarm();
   }
 
-  static const platform = const MethodChannel('samples.flutter.dev/battery');
+  DateTime now;
   @protected
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-        key: scaffoldKey,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton:
-            Stack(alignment: Alignment.bottomCenter, children: <Widget>[
-          Container(
-            height: 210,
-            child: SpinKitRipple(
-              color: ripleColor,
-              size: 210,
-            ),
-          ),
-          Draggable(
-            data: 5,
-            child: buildFab(),
-            feedback: buildFab(),
-            childWhenDragging: Container(),
-            onDragCompleted: () async {
-              if (ripleColor == ripleColorGreen) {
-                FlutterRingtonePlayer.stop();
-                try {
-                  print("exit"); 
-                  await platform.invokeMethod('finishAndRemoveTask');
-                } on PlatformException catch (e) {
-                  print(e);
-                }
-              }
-              setState(() {
-                ripleColor = Colors.red;
-              });
-            },
-          ),
-        ]),
-        body: buildBody(themeProvider));
+    return Scaffold(key: scaffoldKey, body: buildBody(themeProvider));
   }
 
   bool accepted = false;
   Widget buildBody(ThemeProvider themeProvider) {
     return Container(
+      decoration: new BoxDecoration(
+        gradient: new LinearGradient(
+          colors: [Colors.grey[900], Theme.of(context).accentColor],
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+        ),
+      ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Text(
-            'Alarm',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
+          SizedBox(
+            height: 40,
           ),
-          SizedBox(height: 20),
-          Text(
-            title.split(':')[1],
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          Stack(alignment: Alignment.center, children: <Widget>[
+            Container(
+              height: 210,
+              child: SpinKitRipple(
+                color: Colors.grey,
+                size: 210,
+              ),
             ),
-          ),
-          SizedBox(height: 60),
-          Container(
-            height: 90.0,
-            child: DragTarget(
-              builder: (context, List<int> candidateData, rejectedData) {
-                print(candidateData);
-                return Center(child: Icon(Icons.keyboard_arrow_up));
-              },
-              onWillAccept: (data) {
-                print("will");
-                setState(() {
-                  ripleColor = ripleColorGreen;
-                });
-                return true;
-              },
-              onAccept: (data) {
-                setState(() {
-                  ripleColor = ripleColorGreen;
-                });
-              },
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            RotationTransition(
+              turns: new AlwaysStoppedAnimation(330 / 360),
+              child: Icon(
+                Icons.notifications_active,
+                size: 50,
+                color: Colors.grey[100],
+              ),
+            )
+          ]),
+          Column(
             children: <Widget>[
-              Container(
-                width: 100.0,
-                height: 230.0,
-                child: DragTarget(
-                  builder: (context, List<int> candidateData, rejectedData) {
-                    print(candidateData);
-                    return Center(child: Icon(Icons.keyboard_arrow_left));
-                  },
-                  onWillAccept: (data) {
-                    print("will");
-                    setState(() {
-                      ripleColor = ripleColorGreen;
-                    });
-                    return true;
-                  },
-                  onAccept: (data) {
-                    setState(() {
-                      ripleColor = ripleColorGreen;
-                    });
-                  },
+              RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: DateFormat("HH:mm").format(now),
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  TextSpan(
+                    text: DateFormat(" a").format(now),
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ]),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
-              Container(
-                width: 100.0,
-                height: 230.0,
-                child: DragTarget(
-                  builder: (context, List<int> candidateData, rejectedData) {
-                    return Center(child: Icon(Icons.keyboard_arrow_right));
-                  },
-                  onWillAccept: (data) {
-                    print("will");
-                    setState(() {
-                      ripleColor = ripleColorGreen;
-                    });
-                    return true;
-                  },
-                  onAccept: (data) {
-                    setState(() {
-                      ripleColor = ripleColorGreen;
-                    });
-                  },
-                ),
-              )
+            ],
+          ),
+          SizedBox(height: 60),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              ButtonTheme(
+                  height: 40,
+                  buttonColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: FlatButton.icon(
+                      icon: Icon(
+                        Icons.notifications_paused,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        "Snooze",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      onPressed: () {
+                        var snoozeDate =
+                            DateTime.now().add(Duration(minutes: 5));
+                        scheduleNotification(snoozeDate, id, title);
+                        exitApp();
+                      },
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white),
+                          borderRadius: new BorderRadius.circular(70.0)))),
+              ButtonTheme(
+                  height: 40,
+                  buttonColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: FlatButton(
+                      child: Text(
+                        "Dismiss",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      onPressed: () {
+                        exitApp();
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(70.0))))
             ],
           )
         ],
       ),
-      // ),
     );
   }
 
-  buildFab() {
-    return Container(
-        height: 210,
-        width: 210,
-        child: Center(
-            child: ButtonTheme(
-                height: 100,
-                minWidth: 100,
-                child: RaisedButton(
-                    child: Text(
-                      "Stop",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {},
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(70.0))))));
+  Future<void> exitApp() async {
+    FlutterRingtonePlayer.stop();
+    try {
+      print("exit");
+      await platform.invokeMethod('finishAndRemoveTask');
+    } on PlatformException catch (e) {
+      print(e);
+    }
   }
 }
