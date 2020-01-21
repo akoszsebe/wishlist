@@ -33,15 +33,17 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
 
   void init() {
     _con.checkIfStartedForAlarm((alarm,title) {
-      if (alarm) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen(title)));
-      } else {
-        _con.checkLogin(() => {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => HomeScreen()))
-            });
-      }
+       Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen("title:cim")));
+      // if (alarm) {
+      //   Navigator.of(context)
+      //       .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen(title)));
+      // } else {
+      //   _con.checkLogin(() => {
+      //         Navigator.of(context).pushReplacement(
+      //             MaterialPageRoute(builder: (context) => HomeScreen()))
+      //       });
+      // }
     });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
@@ -24,14 +25,14 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
   LoginController _con;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Color barColor1 = Colors.transparent;
-  Color barColor2 = Colors.transparent;
+  Color ripleColor = Colors.red;
+  Color ripleColorGreen = Colors.green;
   @protected
   @override
   void initState() {
     super.initState();
     _con.init();
-    FlutterRingtonePlayer.playAlarm();
+    //FlutterRingtonePlayer.playAlarm();
   }
 
   static const platform = const MethodChannel('samples.flutter.dev/battery');
@@ -42,20 +43,36 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
     return Scaffold(
         key: scaffoldKey,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Draggable(
-          data: 5,
-          axis: Axis.horizontal,
-          child: buildFab(),
-          feedback: buildFab(),
-          childWhenDragging: Container(),
-          onDragCompleted: () async {
-            print("vege");
-            FlutterRingtonePlayer.stop();
-            try {
-              await platform.invokeMethod('finishAndRemoveTask');
-            } on PlatformException catch (e) {}
-          },
-        ),
+        floatingActionButton:
+            Stack(alignment: Alignment.bottomCenter, children: <Widget>[
+          Container(
+            height: 210,
+            child: SpinKitRipple(
+              color: ripleColor,
+              size: 210,
+            ),
+          ),
+          Draggable(
+            data: 5,
+            child: buildFab(),
+            feedback: buildFab(),
+            childWhenDragging: Container(),
+            onDragCompleted: () async {
+              if (ripleColor == ripleColorGreen) {
+                FlutterRingtonePlayer.stop();
+                try {
+                  print("exit"); 
+                  await platform.invokeMethod('finishAndRemoveTask');
+                } on PlatformException catch (e) {
+                  print(e);
+                }
+              }
+              setState(() {
+                ripleColor = Colors.red;
+              });
+            },
+          ),
+        ]),
         body: buildBody(themeProvider));
   }
 
@@ -81,60 +98,71 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 200),
+          SizedBox(height: 60),
+          Container(
+            height: 90.0,
+            child: DragTarget(
+              builder: (context, List<int> candidateData, rejectedData) {
+                print(candidateData);
+                return Center(child: Icon(Icons.keyboard_arrow_up));
+              },
+              onWillAccept: (data) {
+                print("will");
+                setState(() {
+                  ripleColor = ripleColorGreen;
+                });
+                return true;
+              },
+              onAccept: (data) {
+                setState(() {
+                  ripleColor = ripleColorGreen;
+                });
+              },
+            ),
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 width: 100.0,
-                height: 250.0,
-                color: barColor1,
+                height: 230.0,
                 child: DragTarget(
                   builder: (context, List<int> candidateData, rejectedData) {
                     print(candidateData);
-                    return Center(
-                        child: Text(
-                      "<",
-                      style: TextStyle(color: Colors.white, fontSize: 22.0),
-                    ));
+                    return Center(child: Icon(Icons.keyboard_arrow_left));
                   },
                   onWillAccept: (data) {
                     print("will");
                     setState(() {
-                      barColor1 = Colors.red;
+                      ripleColor = ripleColorGreen;
                     });
                     return true;
                   },
                   onAccept: (data) {
                     setState(() {
-                      barColor1 = Colors.red;
+                      ripleColor = ripleColorGreen;
                     });
                   },
                 ),
               ),
               Container(
                 width: 100.0,
-                height: 250.0,
-                color: barColor2,
+                height: 230.0,
                 child: DragTarget(
                   builder: (context, List<int> candidateData, rejectedData) {
-                    return Center(
-                        child: Text(
-                      ">",
-                      style: TextStyle(color: Colors.white, fontSize: 22.0),
-                    ));
+                    return Center(child: Icon(Icons.keyboard_arrow_right));
                   },
                   onWillAccept: (data) {
                     print("will");
                     setState(() {
-                      barColor2 = Colors.red;
+                      ripleColor = ripleColorGreen;
                     });
                     return true;
                   },
                   onAccept: (data) {
                     setState(() {
-                      barColor2 = Colors.red;
+                      ripleColor = ripleColorGreen;
                     });
                   },
                 ),
@@ -148,21 +176,23 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
   }
 
   buildFab() {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 60),
-        child: ButtonTheme(
-            height: 100,
-            minWidth: 100,
-            child: RaisedButton(
-                child: Text(
-                  "Stop",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                color: Theme.of(context).accentColor,
-                onPressed: () {},
-                shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(70.0)))));
+    return Container(
+        height: 210,
+        width: 210,
+        child: Center(
+            child: ButtonTheme(
+                height: 100,
+                minWidth: 100,
+                child: RaisedButton(
+                    child: Text(
+                      "Stop",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    color: Theme.of(context).accentColor,
+                    onPressed: () {},
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(70.0))))));
   }
 }
