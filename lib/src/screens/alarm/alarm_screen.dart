@@ -157,7 +157,13 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(70.0))))
             ],
-          )
+          ),
+          Text("Snooze time is 5 miutes",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w200,
+              ))
         ],
       ),
     );
