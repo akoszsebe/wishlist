@@ -140,8 +140,14 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                         ),
                       ),
                       onPressed: () {
-                        var snoozeDate =
-                            DateTime.now().add(Duration(minutes: 5));
+                        var snoozeDate = DateTime.now();
+                        snoozeDate = DateTime(
+                                snoozeDate.year,
+                                snoozeDate.month,
+                                snoozeDate.day,
+                                snoozeDate.hour,
+                                snoozeDate.minute)
+                            .add(Duration(minutes: 5));
                         scheduleNotification(snoozeDate, id, title);
                         exitApp();
                       },
