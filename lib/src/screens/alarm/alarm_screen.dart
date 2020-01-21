@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/util/theme_provider.dart';
-import 'package:wishlist/util/alarm_manager.dart';
+import 'package:wishlist/src/screens/alarm/alarm_controller.dart';
 
 class AlarmScreen extends StatefulWidget {
   final String title;
@@ -23,32 +20,28 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
   String title = "";
   int id;
 
-  _AlarmScreenState(this.title, this.id) : super(LoginController()) {
+  _AlarmScreenState(this.title, this.id) : super(AlarmController()) {
     this._con = controller;
   }
-  LoginController _con;
+  AlarmController _con;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Color ripleColor = Colors.red;
-  Color ripleColorGreen = Colors.green;
   @protected
   @override
   void initState() {
     super.initState();
-    now = new DateTime.now();
     _con.init();
-    FlutterRingtonePlayer.playAlarm();
   }
 
-  DateTime now;
   @protected
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(key: scaffoldKey, body: buildBody(themeProvider));
+    return WillPopScope(
+        onWillPop: _con.willPopCallback,
+        child: Scaffold(key: scaffoldKey, body: buildBody(themeProvider)));
   }
 
-  bool accepted = false;
   Widget buildBody(ThemeProvider themeProvider) {
     return Container(
       decoration: new BoxDecoration(
@@ -87,7 +80,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
               RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                    text: DateFormat("HH:mm").format(now),
+                    text: DateFormat("HH:mm").format(_con.now),
                     style: TextStyle(
                       fontSize: 40,
                       color: Colors.white,
@@ -95,7 +88,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                     ),
                   ),
                   TextSpan(
-                    text: DateFormat(" a").format(now),
+                    text: DateFormat(" a").format(_con.now),
                     style: TextStyle(
                       fontSize: 22,
                       color: Colors.white,
@@ -140,16 +133,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                         ),
                       ),
                       onPressed: () {
-                        var snoozeDate = DateTime.now();
-                        snoozeDate = DateTime(
-                                snoozeDate.year,
-                                snoozeDate.month,
-                                snoozeDate.day,
-                                snoozeDate.hour,
-                                snoozeDate.minute)
-                            .add(Duration(minutes: 5));
-                        scheduleNotification(snoozeDate, id, title);
-                        exitApp();
+                        _con.scheduleAlarm(id, title);
                       },
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.white),
@@ -168,7 +152,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                         ),
                       ),
                       onPressed: () {
-                        exitApp();
+                        _con.exitApp();
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(70.0))))
@@ -177,15 +161,5 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> exitApp() async {
-    FlutterRingtonePlayer.stop();
-    try {
-      print("exit");
-      await platform.invokeMethod('finishAndRemoveTask');
-    } on PlatformException catch (e) {
-      print(e);
-    }
   }
 }

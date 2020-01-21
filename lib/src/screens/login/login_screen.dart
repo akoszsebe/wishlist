@@ -4,7 +4,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlist/src/screens/login/alarm_screen.dart';
+import 'package:wishlist/src/screens/alarm/alarm_screen.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
@@ -33,7 +33,7 @@ class _LoginScreenState extends StateMVC<LoginScreen> {
 
   void init() {
     _con.checkIfStartedForAlarm((alarm,alarmResult) {
-      //var rng = new Random();
+      // var rng = new Random();
       // Navigator.of(context)
       //       .pushReplacement(MaterialPageRoute(builder: (context) => AlarmScreen("title:Menjek enni",rng.nextInt(1000000))));
       if (alarm) {

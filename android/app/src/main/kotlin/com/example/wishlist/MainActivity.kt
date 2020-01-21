@@ -26,6 +26,12 @@ import android.os.PowerManager.WakeLock
 import android.content.Context.POWER_SERVICE
 import android.app.KeyguardManager.KeyguardLock
 import android.content.Context.KEYGUARD_SERVICE
+import android.widget.Toast
+import android.view.KeyEvent.KEYCODE_HOME
+import android.view.KeyEvent
+import android.view.ViewGroup.LayoutParams
+
+
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "samples.flutter.dev/battery"

@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 18.0,
                           )),
                       background:
-                          Container(color: Theme.of(context).primaryColor)),
+                          Container(color: Theme.of(context).primaryColor),),
                   actions: <Widget>[
                     IconButton(
                       icon: ClipRRect(
