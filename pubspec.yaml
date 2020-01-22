@@ -69,6 +69,9 @@ flutter:
     - resources/images/google_logo.png
     - resources/images/todo_icon.png
     - resources/images/todo_icon_rect.png
+    - resources/images/icons_alarm.png
+    - resources/images/icons_snooze.png
+    
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 

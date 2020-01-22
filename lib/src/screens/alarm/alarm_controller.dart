@@ -25,13 +25,13 @@ class AlarmController extends ControllerMVC {
     HardwareButtons.homeButtonEvents.listen((event) {
       FlutterRingtonePlayer.stop();
     });
-    FlutterRingtonePlayer.playAlarm();
+    playAlarm();
     now = new DateTime.now();
     refresh();
   }
 
   void playAlarm() {
-    FlutterRingtonePlayer.playAlarm();
+    //FlutterRingtonePlayer.playAlarm();
   }
 
   Future<bool> willPopCallback() async {

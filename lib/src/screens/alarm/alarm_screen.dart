@@ -67,12 +67,9 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
               ),
             ),
             RotationTransition(
-              turns: new AlwaysStoppedAnimation(330 / 360),
-              child: Icon(
-                Icons.notifications_active,
-                size: 50,
-                color: Colors.grey[100],
-              ),
+              turns: AlwaysStoppedAnimation(330 / 360), 
+              child:
+             Image(image: AssetImage('resources/images/icons_alarm.png'),color: Colors.grey[100], height: 60,) 
             )
           ]),
           Column(
@@ -111,6 +108,12 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
             ],
           ),
           SizedBox(height: 60),
+          Text("Snooze time is 5 miutes",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w300,
+              )),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
@@ -120,10 +123,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                   buttonColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   child: FlatButton.icon(
-                      icon: Icon(
-                        Icons.notifications_paused,
-                        color: Colors.white,
-                      ),
+                      icon:Image(image: AssetImage('resources/images/icons_snooze.png'),color: Colors.white,height: 20,) , 
                       label: Text(
                         "Snooze",
                         style: TextStyle(
@@ -158,12 +158,6 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                           borderRadius: new BorderRadius.circular(70.0))))
             ],
           ),
-          Text("Snooze time is 5 miutes",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w200,
-              ))
         ],
       ),
     );
