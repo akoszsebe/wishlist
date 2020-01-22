@@ -31,7 +31,7 @@ class AlarmController extends ControllerMVC {
   }
 
   void playAlarm() {
-    //FlutterRingtonePlayer.playAlarm();
+    FlutterRingtonePlayer.playAlarm();
   }
 
   Future<bool> willPopCallback() async {
