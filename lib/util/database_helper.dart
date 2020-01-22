@@ -45,9 +45,15 @@ class DatabaseHelper {
 
   // Database helper methods:
 
-  Future<int> insert(AlarmModel alarm) async {
+  Future<int> insertAlarm(AlarmModel alarm) async {
     Database db = await database;
     int id = await db.insert(tableAlarms, alarm.toMap());
+    return id;
+  }
+
+  Future<int> updateAlarm(AlarmModel alarm) async {
+    Database db = await database;
+    int id = await db.update(tableAlarms, alarm.toMap(),where: '_id = ?', whereArgs: [alarm.id]);
     return id;
   }
 
@@ -60,5 +66,31 @@ class DatabaseHelper {
       return AlarmModel.fromMap(maps.first);
     }
     return null;
+  }
+
+  Future<List<AlarmModel>> queryAlarms() async {
+    // Get a reference to the database.
+    final Database db = await database;
+
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.query('$tableAlarms');
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return AlarmModel.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<int>> queryAlarmIds() async {
+    // Get a reference to the database.
+    final Database db = await database;
+
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.query('$tableAlarms');
+print(maps);
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+      return maps[i]['_id'];
+    });
   }
 }

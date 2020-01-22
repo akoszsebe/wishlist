@@ -115,8 +115,8 @@ void showTimePickerDialog(
                     new FlatButton(
                       child: new Text("Ok"),
                       onPressed: () {
-                        onOK(_dateTime);
                         Navigator.of(context).pop();
+                        onOK(_dateTime);
                       },
                     ),
                   )),

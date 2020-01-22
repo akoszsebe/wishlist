@@ -3,10 +3,8 @@ import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-import 'package:wishlist/src/datamodels/alarm_model.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
-import 'package:wishlist/util/database_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -117,26 +115,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Icon(Icons.account_box)
             ],
           ),
-          FlatButton(
-            child: Text("lssuk"),
-            onPressed: () async {
-              DatabaseHelper helper = DatabaseHelper.instance;
-              int rowId = 1;
-
-              // AlarmModel alarm = AlarmModel(id: rowId);
-              // alarm.title = 'hello';
-              // alarm.when = 15;
-              // int id = await helper.insert(alarm);
-              // print('inserted row: $id');
-
-              AlarmModel word = await helper.queryAlarm(rowId);
-              if (word == null) {
-                print('read row $rowId: empty');
-              } else {
-                print('read row $rowId: ${word.title} ${word.when}');
-              }
-            },
-          )
         ],
       ),
     );

@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final data = _con.list;
     final userData = _con.userData;
+    final alarmIds = _con.alarmIds;
     return Scaffold(
       key: scaffoldKey,
       floatingActionButton: FloatingActionButton(
@@ -63,13 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   floating: true,
                   pinned: false,
                   flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: true,
-                      title: Text(AppLocalizations.of(context).tr('title'),
-                          style: TextStyle(
-                            fontSize: 18.0,
-                          )),
-                      background:
-                          Container(color: Theme.of(context).primaryColor),),
+                    centerTitle: true,
+                    title: Text(AppLocalizations.of(context).tr('title'),
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        )),
+                    background:
+                        Container(color: Theme.of(context).primaryColor),
+                  ),
                   actions: <Widget>[
                     IconButton(
                       icon: ClipRRect(
@@ -110,11 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ];
           },
           body: RefreshIndicator(
-              onRefresh: _con.loadData, child: buildList(data))),
+              onRefresh: _con.loadData, child: buildList(data, alarmIds))),
     );
   }
 
-  Widget buildList(var data) {
+  Widget buildList(var data, List<int> alarmIds) {
     if (data == null) return buildLoader(context);
     if (data.length == 0)
       return ListView(children: <Widget>[
@@ -125,7 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
         themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
     return StaggeredGridView.count(
       crossAxisCount: 4,
-      children: <Widget>[for (var d in data) buildGridItem(d, cardColors)],
+      children: <Widget>[
+        for (var d in data)
+          buildGridItem(d, cardColors, alarmIds.contains(d.id))
+      ],
       //Do you need to go somewhere when you tap on this card, wrap using InkWell and add your route
       staggeredTiles:
           data.map<StaggeredTile>((item) => StaggeredTile.fit(2)).toList(),
@@ -143,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
     FlutterRingtonePlayer.playNotification(looping: false);
   }
 
-  void showModalBootomSheet(d, CardColors cardColors) {
+  void showModalBootomSheet(d, CardColors cardColors, bool hasAlarm) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -195,13 +200,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.pop(context);
                         }),
                     new ListTile(
-                        leading: new Icon(Icons.notifications),
-                        title: new Text('Set Alarm for you'),
+                        leading: new Icon(Icons.alarm_add),
+                        title: hasAlarm
+                            ? Text('Update Alarm for you')
+                            : Text('Set Alarm for you'),
                         onTap: () async {
                           Navigator.pop(context);
                           showTimePickerDialog(context, "Set Alarm",
-                              (dateTime) {
-                            _con.sendLocalNot(dateTime,d.id, d.title);
+                              (dateTime) async {
+                            showLoaderDialog(context);
+                            await _con.insertOrUpdateAlarm(
+                                dateTime, d.id, d.title, () {
+                              Navigator.pop(context);
+                            },
+                                action: hasAlarm
+                                    ? DatabeseActions.update
+                                    : DatabeseActions.insert);
                           });
                         }),
                     new ListTile(
@@ -222,13 +236,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    Padding(padding: EdgeInsets.only(top:8),)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8),
+                    )
                   ],
                 )),
           );
         });
   }
-
 
   Color colorSelector(category, CardColors cardColors) {
     switch (category) {
@@ -241,7 +256,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  buildGridItem(d, cardColors) {
+  buildGridItem(d, cardColors, bool hasAlarm) {
+    //bool alarm = await _con.getAlarm(d.id);
     return Padding(
         padding: EdgeInsets.all(4),
         child: Container(
@@ -252,21 +268,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Container(
                       height: 40,
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(d.title, overflow: TextOverflow.ellipsis)),
+                      child: Text(d.title + " f sdf sdfsdf sd",
+                          overflow: TextOverflow.ellipsis)),
                   subtitle: Container(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(d.content, overflow: TextOverflow.fade)),
                   trailing: IconButton(
                     padding: EdgeInsets.all(0),
                     alignment: Alignment.topRight,
-                    icon: Icon(Icons.more_vert),
+                    icon: Container(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                          if (hasAlarm) Icon(Icons.alarm),
+                          Icon(Icons.more_vert)
+                        ])),
                     onPressed: () {
-                      showModalBootomSheet(d, cardColors);
+                      showModalBootomSheet(d, cardColors, hasAlarm);
                     },
                   ),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   onLongPress: () {
-                    showModalBootomSheet(d, cardColors);
+                    showModalBootomSheet(d, cardColors, hasAlarm);
                   },
                   onTap: () {
                     Navigator.push(context,
