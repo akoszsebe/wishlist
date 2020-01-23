@@ -123,7 +123,7 @@ class TodoController extends ControllerMVC {
   Future<void> insertOrUpdateAlarm(
       DateTime when, int id, String title, VoidCallback callback,
       {DatabaseActions action = DatabaseActions.insert}) async {
-    await scheduleNotification(when, id, title);
+    await scheduleAlarm(when, id, title);
     switch (action) {
       case DatabaseActions.insert:
         await saveAlarm(when, id, title);
@@ -137,15 +137,31 @@ class TodoController extends ControllerMVC {
     callback();
   }
 
+  Future<void> disableAlarm(
+      DateTime when, int id, String title, VoidCallback callback,
+      {DatabaseActions action = DatabaseActions.insert}) async {
+    await cancelAlarm(id);
+    await updateAlarm(when, id, title, alarmEnabled: false);
+    refresh();
+    callback();
+  }
+
   Future<void> saveAlarm(DateTime when, int id, String title) async {
-    AlarmModel alarm =
-        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch, alarmEnabled: true);
+    AlarmModel alarm = AlarmModel(
+        id: id,
+        title: title,
+        when: when.millisecondsSinceEpoch,
+        alarmEnabled: true);
     await helper.insertAlarm(alarm);
   }
 
-  Future<void> updateAlarm(DateTime when, int id, String title) async {
-    AlarmModel alarm =
-        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch, alarmEnabled: true);
+  Future<void> updateAlarm(DateTime when, int id, String title,
+      {bool alarmEnabled = true}) async {
+    AlarmModel alarm = AlarmModel(
+        id: id,
+        title: title,
+        when: when.millisecondsSinceEpoch,
+        alarmEnabled: alarmEnabled);
     await helper.updateAlarm(alarm);
   }
 
@@ -155,10 +171,9 @@ class TodoController extends ControllerMVC {
       print('read row $alarm: empty');
       return null;
     } else {
-      print('read row $alarm: ${alarm.title} ${alarm.when} ${alarm.alarmEnabled}');
+      print(
+          'read row $alarm: ${alarm.title} ${alarm.when} ${alarm.alarmEnabled}');
       return alarm;
     }
   }
 }
-
-

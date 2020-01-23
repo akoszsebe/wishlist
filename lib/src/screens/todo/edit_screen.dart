@@ -101,63 +101,68 @@ class _EditScreenState extends State<EditScreen> {
                         ),
                       ),
                       _con.currentAlarm != null
-                          ? GestureDetector(
-                            onTap: (){
-                              pickTile(context,action: DatabaseActions.update);
-                            },
-                            child: RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: DateFormat(
-                                          "MMM, d EEE ",
-                                          AppLocalizations.of(context)
-                                              .locale
-                                              .toString())
-                                      .format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              _con.currentAlarm.when)),
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .display1
-                                        .color,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: DateFormat(
-                                          "HH:mm",
-                                          AppLocalizations.of(context)
-                                              .locale
-                                              .toString())
-                                      .format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              _con.currentAlarm.when)),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).accentColor,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: DateFormat(
-                                          " a",
-                                          AppLocalizations.of(context)
-                                              .locale
-                                              .toString())
-                                      .format(DateTime.fromMillisecondsSinceEpoch(_con.currentAlarm.when)),
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w200,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .display1
-                                        .color,
-                                  ),
-                                ),
-                              ]),
-                            ))
+                          ? Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                  onTap: () {
+                                    pickTile(context,
+                                        action: DatabaseActions.update);
+                                  },
+                                  child: RichText(
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                        text: DateFormat(
+                                                "MMM, d EEE ",
+                                                AppLocalizations.of(context)
+                                                    .locale
+                                                    .toString())
+                                            .format(DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    _con.currentAlarm.when)),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .color,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: DateFormat(
+                                                "HH:mm",
+                                                AppLocalizations.of(context)
+                                                    .locale
+                                                    .toString())
+                                            .format(DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    _con.currentAlarm.when)),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Theme.of(context).accentColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: DateFormat(
+                                                " a",
+                                                AppLocalizations.of(context)
+                                                    .locale
+                                                    .toString())
+                                            .format(DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    _con.currentAlarm.when)),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w200,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .color,
+                                        ),
+                                      ),
+                                    ]),
+                                  )))
                           : FlatButton.icon(
                               icon: Icon(Icons.alarm_add),
                               label: Text("Select date"),
@@ -171,9 +176,30 @@ class _EditScreenState extends State<EditScreen> {
                             : false,
                         activeColor: Theme.of(context).accentColor,
                         onChanged: (val) {
-                          setState(() {
+                          setState(() async {
                             if (_con.currentAlarm != null) {
-                              _con.currentAlarm.alarmEnabled = val;
+                              if (val == false) {
+                                _con.disableAlarm(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        _con.currentAlarm.when),
+                                    _con.currentAlarm.id,
+                                    _con.currentAlarm.title, () {
+                                  _con.currentAlarm.alarmEnabled = val;
+                                });
+                              } else {
+                                await _con.insertOrUpdateAlarm(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        _con.currentAlarm.when),
+                                    _con.currentAlarm.id,
+                                    _title == null ? _todo.title : _title, () {
+                                  _con.initAlarm(_todo.id);
+                                  setState(() {
+                                    if (_con.currentAlarm != null) {
+                                      _con.currentAlarm.alarmEnabled = true;
+                                    }
+                                  });
+                                },action: DatabaseActions.update);
+                              }
                             } else {
                               pickTile(context);
                             }
@@ -237,7 +263,8 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  void pickTile(BuildContext context, {DatabaseActions action = DatabaseActions.insert}) {
+  void pickTile(BuildContext context,
+      {DatabaseActions action = DatabaseActions.insert}) {
     showTimePickerDialog(context, "Set Alarm", (dateTime) async {
       showLoaderDialog(context);
       await _con.insertOrUpdateAlarm(
@@ -247,10 +274,9 @@ class _EditScreenState extends State<EditScreen> {
           if (_con.currentAlarm != null) {
             _con.currentAlarm.alarmEnabled = true;
           }
-        }
-        );
+        });
         Navigator.pop(context);
-      },action: action);
+      }, action: action);
     });
   }
 }

@@ -49,6 +49,10 @@ class MainActivity: FlutterActivity() {
                                 var title : String? = call.argument("title");
                                 setAlarm(time!!, id!!, title!!);
                                 result.success(true);
+                            } else if (call.method.equals("cancelAlarm")) {
+                                var id : Int? = call.argument("id");
+                                cancelAlarm(id!!);
+                                result.success(true);
                             } else if (call.method.equals("getIntentParams")) {
                                 val resultt:String = intent.getStringExtra("needAlarm") ?: "default";
                                 val title:String = intent.getStringExtra("title") ?: "";
@@ -108,6 +112,16 @@ class MainActivity: FlutterActivity() {
         alarmMgr?.set(
                 AlarmManager.RTC_WAKEUP,
                 time,
+                alarmIntent
+        )
+    }
+
+    private fun cancelAlarm(id : Int){
+        alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        var intent = Intent(context, SampleBootReceiver::class.java)
+        alarmIntent =  PendingIntent.getBroadcast(context, id, intent, 0)
+        println("cancel alarm for  "+ id)
+        alarmMgr?.cancel(
                 alarmIntent
         )
     }
