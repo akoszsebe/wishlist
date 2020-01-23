@@ -11,6 +11,7 @@ import 'package:wishlist/src/screens/todo/add_screen.dart';
 import 'package:wishlist/src/screens/settings/settings_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_theme.dart';
+import 'package:wishlist/util/database_helper.dart';
 import 'package:wishlist/util/theme_provider.dart';
 import 'package:wishlist/util/widgets.dart';
 
@@ -214,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.pop(context);
                             },
                                 action: hasAlarm
-                                    ? DatabeseActions.update
-                                    : DatabeseActions.insert);
+                                    ? DatabaseActions.update
+                                    : DatabaseActions.insert);
                           });
                         }),
                     new ListTile(

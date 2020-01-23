@@ -38,7 +38,8 @@ class DatabaseHelper {
               CREATE TABLE $tableAlarms (
                 _id INTEGER PRIMARY KEY,
                 _title TEXT NOT NULL,
-                _when INTEGER NOT NULL
+                _when INTEGER NOT NULL,
+                _alarmEnabled INTEGER NOT NULL
               )
               ''');
   }
@@ -53,7 +54,8 @@ class DatabaseHelper {
 
   Future<int> updateAlarm(AlarmModel alarm) async {
     Database db = await database;
-    int id = await db.update(tableAlarms, alarm.toMap(),where: '_id = ?', whereArgs: [alarm.id]);
+    int id = await db.update(tableAlarms, alarm.toMap(),
+        where: '_id = ?', whereArgs: [alarm.id]);
     return id;
   }
 
@@ -61,7 +63,9 @@ class DatabaseHelper {
     print(id);
     Database db = await database;
     List<Map> maps = await db.query(tableAlarms,
-        columns: ["_id", "_title", "_when"], where: '_id = ?', whereArgs: [id]);
+        columns: ["_id", "_title", "_when", "_alarmEnabled"],
+        where: '_id = ?',
+        whereArgs: [id]);
     if (maps.length > 0) {
       return AlarmModel.fromMap(maps.first);
     }
@@ -87,10 +91,12 @@ class DatabaseHelper {
 
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps = await db.query('$tableAlarms');
-print(maps);
+    print(maps);
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
       return maps[i]['_id'];
     });
   }
 }
+
+enum DatabaseActions { insert, update }

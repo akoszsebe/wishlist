@@ -1,8 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:wishlist/util/database_helper.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
+import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_keys.dart';
+import 'package:intl/intl.dart';
 
 class EditScreen extends StatefulWidget {
   final TodoResponse todo;
@@ -25,6 +29,13 @@ class _EditScreenState extends State<EditScreen> {
   String _content;
 
   _EditScreenState(this._todo);
+
+  @protected
+  @override
+  void initState() {
+    super.initState();
+    _con.initAlarm(_todo.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +80,107 @@ class _EditScreenState extends State<EditScreen> {
                       else
                         return null;
                     },
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Container(
+                  padding:
+                      EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 0),
+                  decoration: new BoxDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      borderRadius: new BorderRadius.circular(12.0)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Alarm",
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
+                      ),
+                      _con.currentAlarm != null
+                          ? GestureDetector(
+                            onTap: (){
+                              pickTile(context,action: DatabaseActions.update);
+                            },
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: DateFormat(
+                                          "MMM, d EEE ",
+                                          AppLocalizations.of(context)
+                                              .locale
+                                              .toString())
+                                      .format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              _con.currentAlarm.when)),
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .display1
+                                        .color,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: DateFormat(
+                                          "HH:mm",
+                                          AppLocalizations.of(context)
+                                              .locale
+                                              .toString())
+                                      .format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              _con.currentAlarm.when)),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).accentColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: DateFormat(
+                                          " a",
+                                          AppLocalizations.of(context)
+                                              .locale
+                                              .toString())
+                                      .format(DateTime.fromMillisecondsSinceEpoch(_con.currentAlarm.when)),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w200,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .display1
+                                        .color,
+                                  ),
+                                ),
+                              ]),
+                            ))
+                          : FlatButton.icon(
+                              icon: Icon(Icons.alarm_add),
+                              label: Text("Select date"),
+                              onPressed: () {
+                                pickTile(context);
+                              },
+                            ),
+                      Switch(
+                        value: _con.currentAlarm != null
+                            ? _con.currentAlarm.alarmEnabled
+                            : false,
+                        activeColor: Theme.of(context).accentColor,
+                        onChanged: (val) {
+                          setState(() {
+                            if (_con.currentAlarm != null) {
+                              _con.currentAlarm.alarmEnabled = val;
+                            } else {
+                              pickTile(context);
+                            }
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 )),
             Padding(
@@ -123,5 +235,22 @@ class _EditScreenState extends State<EditScreen> {
         ),
       ),
     );
+  }
+
+  void pickTile(BuildContext context, {DatabaseActions action = DatabaseActions.insert}) {
+    showTimePickerDialog(context, "Set Alarm", (dateTime) async {
+      showLoaderDialog(context);
+      await _con.insertOrUpdateAlarm(
+          dateTime, _todo.id, _title == null ? _todo.title : _title, () {
+        _con.initAlarm(_todo.id);
+        setState(() {
+          if (_con.currentAlarm != null) {
+            _con.currentAlarm.alarmEnabled = true;
+          }
+        }
+        );
+        Navigator.pop(context);
+      },action: action);
+    });
   }
 }

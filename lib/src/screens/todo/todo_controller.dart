@@ -27,6 +27,7 @@ class TodoController extends ControllerMVC {
   List<TodoResponse> list;
   UserModel userData;
   List<int> alarmIds;
+  AlarmModel currentAlarm;
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
@@ -43,6 +44,11 @@ class TodoController extends ControllerMVC {
     SessionRepository().setFirebaseDeviceId(firebaseDeviceId);
     registerForNotification(firebaseDeviceId, userData.userId);
     loadData();
+  }
+
+  Future<void> initAlarm(int id) async {
+    currentAlarm = await existsAlarm(id);
+    refresh();
   }
 
   Future<void> loadData() async {
@@ -116,15 +122,15 @@ class TodoController extends ControllerMVC {
 
   Future<void> insertOrUpdateAlarm(
       DateTime when, int id, String title, VoidCallback callback,
-      {DatabeseActions action = DatabeseActions.insert}) async {
+      {DatabaseActions action = DatabaseActions.insert}) async {
     await scheduleNotification(when, id, title);
     switch (action) {
-      case DatabeseActions.insert:
+      case DatabaseActions.insert:
         await saveAlarm(when, id, title);
         alarmIds.add(id);
         refresh();
         break;
-      case DatabeseActions.update:
+      case DatabaseActions.update:
         await updateAlarm(when, id, title);
         break;
     }
@@ -133,26 +139,26 @@ class TodoController extends ControllerMVC {
 
   Future<void> saveAlarm(DateTime when, int id, String title) async {
     AlarmModel alarm =
-        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch);
+        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch, alarmEnabled: true);
     await helper.insertAlarm(alarm);
   }
 
   Future<void> updateAlarm(DateTime when, int id, String title) async {
     AlarmModel alarm =
-        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch);
+        AlarmModel(id: id, title: title, when: when.millisecondsSinceEpoch, alarmEnabled: true);
     await helper.updateAlarm(alarm);
   }
 
-  Future<bool> getAlarm(id) async {
+  Future<AlarmModel> existsAlarm(id) async {
     var alarm = await helper.queryAlarm(id);
     if (alarm == null) {
       print('read row $alarm: empty');
-      return false;
+      return null;
     } else {
-      print('read row $alarm: ${alarm.title} ${alarm.when}');
-      return true;
+      print('read row $alarm: ${alarm.title} ${alarm.when} ${alarm.alarmEnabled}');
+      return alarm;
     }
   }
 }
 
-enum DatabeseActions { insert, update }
+
