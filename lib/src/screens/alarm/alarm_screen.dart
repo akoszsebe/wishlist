@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +109,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
             ],
           ),
           SizedBox(height: 60),
-          Text("Snooze time is 5 miutes",
+          Text(AppLocalizations.of(context).tr('alarm.snooze_time'),
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.white,
@@ -125,7 +126,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                   child: FlatButton.icon(
                       icon:Image(image: AssetImage('resources/images/icons_snooze.png'),color: Colors.white,height: 20,) , 
                       label: Text(
-                        "Snooze",
+                        AppLocalizations.of(context).tr('alarm.snooze_button'),
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -144,7 +145,7 @@ class _AlarmScreenState extends StateMVC<AlarmScreen> {
                   splashColor: Colors.transparent,
                   child: FlatButton(
                       child: Text(
-                        "Dismiss",
+                        AppLocalizations.of(context).tr('alarm.dismiss_button'),
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,

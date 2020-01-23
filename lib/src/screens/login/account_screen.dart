@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _AccountScreenState extends StateMVC<AccountScreen> {
     final userData = _con.userData;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text(AppLocalizations.of(context).tr('profile.title')),
       ),
       body: Container(
         child: Center(
@@ -55,7 +56,7 @@ class _AccountScreenState extends StateMVC<AccountScreen> {
                     ),
                     SizedBox(height: 40),
                     Text(
-                      'NAME',
+                      AppLocalizations.of(context).tr('profile.name'),
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -70,7 +71,7 @@ class _AccountScreenState extends StateMVC<AccountScreen> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'EMAIL',
+                      AppLocalizations.of(context).tr('profile.email'),
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -96,7 +97,7 @@ class _AccountScreenState extends StateMVC<AccountScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'Sign Out',
+                           AppLocalizations.of(context).tr('profile.sign_out'),
                           style: TextStyle(fontSize: 25),
                         ),
                       ),

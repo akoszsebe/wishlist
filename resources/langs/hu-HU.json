@@ -1,22 +1,41 @@
 {
-    "title": "Bevasarlo lista",
-    "settings": "Bealitasok",
-    "language" : "Nyelv",
-    "light" : "Vilagos",
-    "dark" : "Sotet",
-    "nodata" : "Nincs tennivalo",
-    "addtitle": "Teendo hozzadasa",
-    "updatetodo": "Frissites",
-    "edittitle": "Teendo modositasa",
-    "newTodotite": "cim hozzadasa",
-    "contenttext": "tartalom hozzadasa",
-    "contenttextmin": "A tartalom hosszabb kell legyen mint 2 karakter",
-    "titletextmin": "A Cim hosszabb kell legyen mint 2 karakter",
-    "wellcome": "Udvozlunk a Wishlist alkalmazasban",
-    "addtodo": "Hozzadas",
-    "profile": {
-      "reset_password": {
-        "title": "Reset Password"
-      }
-    }
+  "title": "Az On teendoi",
+  "settings": "Bealitasok",
+  "language": "Nyelv",
+  "light": "Vilagos",
+  "dark": "Sotet",
+  "nodata": "Nincs tennivalo",
+  "addtitle": "Teendo hozzadasa",
+  "updatetodo": "Frissites",
+  "edittitle": "Teendo modositasa",
+  "newTodotite": "cim hozzadasa",
+  "todotite": "Cim",
+  "contenttext": "tartalom hozzadasa",
+  "content": "Tartalom",
+  "contenttextmin": "A tartalom hosszabb kell legyen mint 2 karakter",
+  "titletextmin": "A Cim hosszabb kell legyen mint 2 karakter",
+  "wellcome": "Udvozlunk a Wishlist alkalmazasban",
+  "addtodo": "Hozzadas",
+  "profile": {
+    "title": "Profil",
+    "name": "Nev",
+    "email": "E-mail",
+    "sign_out" : "Kijelentkezes"
+  },
+  "dialog_timepicker_title": "Riasztás hozzadasa",
+  "bottom_sheet_normal": "Normalis",
+  "bottom_sheet_lesimp": "Kevesbe fontos",
+  "bottom_sheet_imp": "Fontos",
+  "bottom_sheet_notif": "Értesíts mindenkit",
+  "bottom_sheet_updatealarm": "Riasztás frissitese",
+  "bottom_sheet_setdatealarm": "Riasztás hozzadasa",
+  "bottom_sheet_edit": "Szerkesztés",
+  "bottom_sheet_delete": "Törles",
+  "alarm": {
+    "title" : "Riasztas",
+    "snooze_time": "A szundi ideje 5 perc",
+    "snooze_button": "Szundi",
+    "dismiss_button": "Elvet",
+    "select_date" : "Válassza ki a dátumot"
   }
+}

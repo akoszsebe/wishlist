@@ -94,7 +94,7 @@ class _EditScreenState extends State<EditScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "Alarm",
+                        AppLocalizations.of(context).tr('alarm.title'),
                         style: TextStyle(
                           fontSize: 24,
                         ),
@@ -164,7 +164,7 @@ class _EditScreenState extends State<EditScreen> {
                                   )))
                           : FlatButton.icon(
                               icon: Icon(Icons.alarm_add),
-                              label: Text("Select date"),
+                              label: Text( AppLocalizations.of(context).tr('alarm.select_date')),
                               onPressed: () {
                                 pickTile(context);
                               },
@@ -264,7 +264,7 @@ class _EditScreenState extends State<EditScreen> {
 
   void pickTile(BuildContext context,
       {DatabaseActions action = DatabaseActions.insert}) {
-    showTimePickerDialog(context, "Set Alarm", (dateTime) async {
+    showTimePickerDialog(context, AppLocalizations.of(context).tr('dialog_timepicker_title'), (dateTime) async {
       showLoaderDialog(context);
       await _con.insertOrUpdateAlarm(
           dateTime, _todo.id, _title == null ? _todo.title : _title, () {

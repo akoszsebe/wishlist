@@ -1,24 +1,41 @@
 {
-    "title": "Shopping List",
-    "settings": "Settings",
-    "language" : "Language",
-    "light" : "Light",
-    "dark" : "Dark",
-    "nodata" : "No todo",
-    "addtitle": "Add Todo",
-    "updatetodo": "Update",
-    "edittitle": "Edit Todo",
-    "newTodotite": "insert title",
-    "todotite" : "Title",
-    "contenttext": "insert content",
-    "content": "Content",
-    "contenttextmin": "Content must be more than 2 charater",
-    "titletextmin": "Title must be more than 2 charater",
-    "wellcome": "Wellcome in Wishlist app",
-    "addtodo": "Add Todo",
-    "profile": {
-      "reset_password": {
-        "title": "Reset Password"
-      }
-    }
+  "title": "Your Todos",
+  "settings": "Settings",
+  "language": "Language",
+  "light": "Light",
+  "dark": "Dark",
+  "nodata": "No todo",
+  "addtitle": "Add Todo",
+  "updatetodo": "Update",
+  "edittitle": "Edit Todo",
+  "newTodotite": "insert title",
+  "todotite": "Title",
+  "contenttext": "insert content",
+  "content": "Content",
+  "contenttextmin": "Content must be more than 2 charater",
+  "titletextmin": "Title must be more than 2 charater",
+  "wellcome": "Wellcome in Wishlist app",
+  "addtodo": "Add Todo",
+  "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "sign_out" : "Sign Out"
+  },
+  "dialog_timepicker_title": "Set Alarm",
+  "bottom_sheet_normal": "Normal",
+  "bottom_sheet_lesimp": "Less Important",
+  "bottom_sheet_imp": "Important",
+  "bottom_sheet_notif": "Notify Everybody",
+  "bottom_sheet_updatealarm": "Update Alarm for you",
+  "bottom_sheet_setdatealarm": "Set Alarm for you",
+  "bottom_sheet_edit": "Edit",
+  "bottom_sheet_delete": "Delete",
+  "alarm": {
+    "title" : "Alarm",
+    "snooze_time":"Snooze time is 5 miutes",
+    "snooze_button" : "Snooze",
+    "dismiss_button" : "Dismiss",
+    "select_date" : "Select date"
   }
+}
