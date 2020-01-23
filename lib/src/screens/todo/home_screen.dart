@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Container(
                       height: 40,
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(d.title + " f sdf sdfsdf sd",
+                      child: Text(d.title,
                           overflow: TextOverflow.ellipsis)),
                   subtitle: Container(
                       padding: const EdgeInsets.only(bottom: 10),
