@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:wishlist/src/database/alarm_database.dart';
+import 'package:wishlist/src/database/database_helper.dart';
 import 'package:wishlist/src/datamodels/alarm_model.dart';
 import 'package:wishlist/src/datamodels/push_notification_model.dart';
 import 'package:wishlist/src/datamodels/user_model.dart';
@@ -8,7 +10,6 @@ import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/repository/session_repository.dart';
-import 'package:wishlist/util/database_helper.dart';
 import 'package:wishlist/util/firebasenotifications.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/alarm_manager.dart';
@@ -33,7 +34,7 @@ class TodoController extends ControllerMVC {
   final NotificationApiProvider notificationApiProvider =
       NotificationApiProvider();
   final FirebaseNotifications _firebaseNotifications = FirebaseNotifications();
-  final DatabaseHelper helper = DatabaseHelper.instance;
+  final AlarmDatabase helper = AlarmDatabase.instance;
 
   void init() async {
     _firebaseNotifications..setUpFirebase();

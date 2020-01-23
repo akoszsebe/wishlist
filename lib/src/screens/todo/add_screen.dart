@@ -45,57 +45,10 @@ class _AddScreenState extends State<AddScreen> {
                 child: Container(
                   padding: EdgeInsets.only(top: 16, bottom: 16),
                   decoration: new BoxDecoration(
-                      color: Theme.of(context).primaryColorLight,
+                      color: Theme.of(context).cardColor,
                       borderRadius: new BorderRadius.circular(12.0)),
-                  child: TextFormField(
-                    initialValue: "",
-                    key: AppKeys.taskField,
-                    style: Theme.of(context).textTheme.headline,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText:
-                            AppLocalizations.of(context).tr('newTodotite'),
-                        contentPadding: EdgeInsets.all(16),
-                        labelText: AppLocalizations.of(context).tr('todotite')),
-                    cursorColor: Theme.of(context).accentColor,
-                    onSaved: (value) => _title = value,
-                    validator: (String arg) {
-                      if (arg.length < 3)
-                        return AppLocalizations.of(context).tr('titletextmin');
-                      else
-                        return null;
-                    },
-                  ),
+                  child: Column( children: <Widget>[buildTitleFormFieled(),buildContentFormFieled()])
                 )),
-            Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: Container(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    decoration: new BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        borderRadius: new BorderRadius.circular(12.0)),
-                    child: TextFormField(
-                      initialValue: '',
-                      key: AppKeys.noteField,
-                      maxLines: 15,
-                      style: Theme.of(context).textTheme.subhead,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText:
-                              AppLocalizations.of(context).tr('contenttext'),
-                          contentPadding: EdgeInsets.all(16),
-                          labelText:
-                              AppLocalizations.of(context).tr('content')),
-                      cursorColor: Theme.of(context).accentColor,
-                      onSaved: (value) => _content = value,
-                      validator: (String arg) {
-                        if (arg.length < 3)
-                          return AppLocalizations.of(context)
-                              .tr('contenttextmin');
-                        else
-                          return null;
-                      },
-                    ))),
             Container(
                 margin: EdgeInsets.only(bottom: 16),
                 height: 60,
@@ -122,4 +75,47 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   bool get isEditing => widget.todoId != null;
+
+  Widget buildTitleFormFieled() {
+    return TextFormField(
+      initialValue: "",
+      key: AppKeys.taskField,
+      style: Theme.of(context).textTheme.headline,
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: AppLocalizations.of(context).tr('newTodotite'),
+          contentPadding: EdgeInsets.all(16),
+          labelText: AppLocalizations.of(context).tr('todotite')),
+      cursorColor: Theme.of(context).accentColor,
+      onSaved: (value) => _title = value,
+      validator: (String arg) {
+        if (arg.length < 3)
+          return AppLocalizations.of(context).tr('titletextmin');
+        else
+          return null;
+      },
+    );
+  }
+
+  Widget buildContentFormFieled() {
+    return TextFormField(
+      initialValue: '',
+      key: AppKeys.noteField,
+      maxLines: 15,
+      style: Theme.of(context).textTheme.subhead,
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: AppLocalizations.of(context).tr('contenttext'),
+          contentPadding: EdgeInsets.all(16),
+          labelText: AppLocalizations.of(context).tr('content')),
+      cursorColor: Theme.of(context).accentColor,
+      onSaved: (value) => _content = value,
+      validator: (String arg) {
+        if (arg.length < 3)
+          return AppLocalizations.of(context).tr('contenttextmin');
+        else
+          return null;
+      },
+    );
+  }
 }

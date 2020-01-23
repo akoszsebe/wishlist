@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:wishlist/util/database_helper.dart';
+import 'package:wishlist/src/database/database_helper.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/util/alert_dialog.dart';
@@ -55,39 +55,12 @@ class _EditScreenState extends State<EditScreen> {
         child: ListView(
           children: [
             Padding(
-                padding: EdgeInsets.all(16),
-                child: Container(
-                  padding: EdgeInsets.only(top: 16, bottom: 16),
-                  decoration: new BoxDecoration(
-                      color: Theme.of(context).primaryColorLight,
-                      borderRadius: new BorderRadius.circular(12.0)),
-                  child: TextFormField(
-                    initialValue: _todo.title,
-                    key: AppKeys.taskField,
-                    style: Theme.of(context).textTheme.headline,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText:
-                            AppLocalizations.of(context).tr('newTodotite'),
-                        contentPadding: EdgeInsets.all(16),
-                        labelText: AppLocalizations.of(context).tr('todotite')),
-                    cursorColor: Theme.of(context).accentColor,
-                    onSaved: (value) => _title = value,
-                    validator: (String arg) {
-                      if (arg.length < 3)
-                        return AppLocalizations.of(context).tr('titletextmin');
-                      else
-                        return null;
-                    },
-                  ),
-                )),
-            Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                 child: Container(
                   padding:
                       EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 0),
                   decoration: new BoxDecoration(
-                      color: Theme.of(context).primaryColorLight,
+                      color: Theme.of(context).cardColor,
                       borderRadius: new BorderRadius.circular(12.0)),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -164,7 +137,8 @@ class _EditScreenState extends State<EditScreen> {
                                   )))
                           : FlatButton.icon(
                               icon: Icon(Icons.alarm_add),
-                              label: Text( AppLocalizations.of(context).tr('alarm.select_date')),
+                              label: Text(AppLocalizations.of(context)
+                                  .tr('alarm.select_date')),
                               onPressed: () {
                                 pickTile(context);
                               },
@@ -197,7 +171,7 @@ class _EditScreenState extends State<EditScreen> {
                                       _con.currentAlarm.alarmEnabled = true;
                                     }
                                   });
-                                },action: DatabaseActions.update);
+                                }, action: DatabaseActions.update);
                               }
                             } else {
                               pickTile(context);
@@ -209,34 +183,19 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                 )),
             Padding(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                padding: EdgeInsets.all(16),
                 child: Container(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    decoration: new BoxDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        borderRadius: new BorderRadius.circular(12.0)),
-                    child: TextFormField(
-                      initialValue: _todo.content,
-                      key: AppKeys.noteField,
-                      maxLines: 15,
-                      style: Theme.of(context).textTheme.subhead,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText:
-                              AppLocalizations.of(context).tr('contenttext'),
-                          contentPadding: EdgeInsets.all(16),
-                          labelText:
-                              AppLocalizations.of(context).tr('content')),
-                      cursorColor: Theme.of(context).accentColor,
-                      onSaved: (value) => _content = value,
-                      validator: (String arg) {
-                        if (arg.length < 3)
-                          return AppLocalizations.of(context)
-                              .tr('contenttextmin');
-                        else
-                          return null;
-                      },
-                    ))),
+                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                  decoration: new BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: new BorderRadius.circular(12.0)),
+                  child: Column(
+                    children: <Widget>[
+                      buildTitleFormField(),
+                      buildContentFormField()
+                    ],
+                  ),
+                )),
             Container(
                 padding: EdgeInsets.only(bottom: 16),
                 height: 60,
@@ -264,7 +223,9 @@ class _EditScreenState extends State<EditScreen> {
 
   void pickTile(BuildContext context,
       {DatabaseActions action = DatabaseActions.insert}) {
-    showTimePickerDialog(context, AppLocalizations.of(context).tr('dialog_timepicker_title'), (dateTime) async {
+    showTimePickerDialog(
+        context, AppLocalizations.of(context).tr('dialog_timepicker_title'),
+        (dateTime) async {
       showLoaderDialog(context);
       await _con.insertOrUpdateAlarm(
           dateTime, _todo.id, _title == null ? _todo.title : _title, () {
@@ -277,5 +238,48 @@ class _EditScreenState extends State<EditScreen> {
         Navigator.pop(context);
       }, action: action);
     });
+  }
+
+  buildContentFormField() {
+    return TextFormField(
+      initialValue: _todo.content,
+      key: AppKeys.noteField,
+      maxLines: 15,
+      style: Theme.of(context).textTheme.subhead,
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: AppLocalizations.of(context).tr('contenttext'),
+          contentPadding: EdgeInsets.all(16),
+          labelText: AppLocalizations.of(context).tr('content')),
+      cursorColor: Theme.of(context).accentColor,
+      onSaved: (value) => _content = value,
+      validator: (String arg) {
+        if (arg.length < 3)
+          return AppLocalizations.of(context).tr('contenttextmin');
+        else
+          return null;
+      },
+    );
+  }
+
+  buildTitleFormField() {
+    return TextFormField(
+      initialValue: _todo.title,
+      key: AppKeys.taskField,
+      style: Theme.of(context).textTheme.headline,
+      decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: AppLocalizations.of(context).tr('newTodotite'),
+          contentPadding: EdgeInsets.all(16),
+          labelText: AppLocalizations.of(context).tr('todotite')),
+      cursorColor: Theme.of(context).accentColor,
+      onSaved: (value) => _title = value,
+      validator: (String arg) {
+        if (arg.length < 3)
+          return AppLocalizations.of(context).tr('titletextmin');
+        else
+          return null;
+      },
+    );
   }
 }
