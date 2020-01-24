@@ -23,6 +23,7 @@
       "sign_out" : "Sign Out"
   },
   "dialog_timepicker_title": "Set Alarm",
+  "bottom_sheet_nocat" : "No Category",
   "bottom_sheet_normal": "Normal",
   "bottom_sheet_lesimp": "Less Important",
   "bottom_sheet_imp": "Important",

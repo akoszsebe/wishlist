@@ -42,19 +42,21 @@ class AppTheme {
 }
 
 class CardColors{
+  Color color0 = Colors.grey[300];
   Color color1 = Colors.grey[100];
   Color color2 = Colors.grey[100];
   Color color3 = Colors.grey[100];
 }
 
 class CardLightColors extends CardColors{
-  Color color1 = Color(0xff4dd0e1);//Colors.grey[300];
-  Color color2 = Color(0xff2196f3);//Colors.orange[200];
-  Color color3 = Color(0xff7986cb);//Colors.red[200];
+  Color color1 = Color(0xff4dd0e1);
+  Color color2 = Color(0xff2196f3);
+  Color color3 = Color(0xff7986cb);
 }
 
 class CardDarkColors extends CardColors{
-  Color color1 = Color(0xff27B6D1);//Colors.grey[800];
-  Color color2 = Color(0xff516EEC);
+  Color color0 = Colors.grey[800];
+  Color color1 = Color(0xff27B6D1);
+  Color color2 = Color(0xff2196f3);
   Color color3 = Color(0xff334CA9);
 }

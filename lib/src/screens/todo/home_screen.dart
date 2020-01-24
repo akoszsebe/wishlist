@@ -150,7 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showModalBootomSheet(d, CardColors cardColors, bool hasAlarm) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
@@ -159,43 +161,53 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.transparent,
             child: Card(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0))),
                 color: Theme.of(context).primaryColor,
                 child: new Wrap(
                   children: <Widget>[
-                    new ListTile(
-                        leading: new Icon(
-                          Icons.fiber_manual_record,
-                          color: cardColors.color1,
-                        ),
-                        title: new Text(AppLocalizations.of(context).tr('bottom_sheet_normal')),
-                        onTap: () {
-                          _con.updateCategory(d.id, 0);
-                          Navigator.pop(context);
-                        }),
-                    new ListTile(
-                        leading: new Icon(
-                          Icons.fiber_manual_record,
-                          color: cardColors.color2,
-                        ),
-                        title: new Text(AppLocalizations.of(context).tr('bottom_sheet_lesimp')),
-                        onTap: () {
-                          _con.updateCategory(d.id, 1);
-                          Navigator.pop(context);
-                        }),
-                    new ListTile(
-                        leading: new Icon(
-                          Icons.fiber_manual_record,
-                          color: cardColors.color3,
-                        ),
-                        title: new Text(AppLocalizations.of(context).tr('bottom_sheet_imp')),
-                        onTap: () {
-                          _con.updateCategory(d.id, 2);
-                          Navigator.pop(context);
-                        }),
+                    Container(
+                      height: 8,
+                    ),
+                    Center(
+                        child: Container(
+                      decoration: BoxDecoration(
+                          color: themeProvider.isLightTheme
+                              ? Colors.grey[500]
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(4.0)),
+                      width: 40,
+                      height: 5,
+                    )),
+                    buildCategoryItem(
+                      cardColors.color0,
+                      AppLocalizations.of(context).tr('bottom_sheet_nocat'),
+                      d.id,
+                      0,
+                    ),
+                    buildCategoryItem(
+                      cardColors.color1,
+                      AppLocalizations.of(context).tr('bottom_sheet_normal'),
+                      d.id,
+                      1,
+                    ),
+                    buildCategoryItem(
+                      cardColors.color2,
+                      AppLocalizations.of(context).tr('bottom_sheet_lesimp'),
+                      d.id,
+                      2,
+                    ),
+                    buildCategoryItem(
+                      cardColors.color3,
+                      AppLocalizations.of(context).tr('bottom_sheet_imp'),
+                      d.id,
+                      3,
+                    ),
                     new ListTile(
                         leading: new Icon(Icons.notifications),
-                        title: new Text(AppLocalizations.of(context).tr('bottom_sheet_notif')),
+                        title: new Text(AppLocalizations.of(context)
+                            .tr('bottom_sheet_notif')),
                         onTap: () {
                           _con.notifyTodo(d.title, d.content);
                           Navigator.pop(context);
@@ -203,11 +215,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     new ListTile(
                         leading: new Icon(Icons.alarm_add),
                         title: hasAlarm
-                            ? Text(AppLocalizations.of(context).tr('bottom_sheet_updatealarm'))
-                            : Text(AppLocalizations.of(context).tr('bottom_sheet_setdatealarm')),
+                            ? Text(AppLocalizations.of(context)
+                                .tr('bottom_sheet_updatealarm'))
+                            : Text(AppLocalizations.of(context)
+                                .tr('bottom_sheet_setdatealarm')),
                         onTap: () async {
                           Navigator.pop(context);
-                          showTimePickerDialog(context, AppLocalizations.of(context).tr('dialog_timepicker_title'),
+                          showTimePickerDialog(
+                              context,
+                              AppLocalizations.of(context)
+                                  .tr('dialog_timepicker_title'),
                               (dateTime) async {
                             showLoaderDialog(context);
                             await _con.insertOrUpdateAlarm(
@@ -221,7 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                     new ListTile(
                         leading: new Icon(Icons.edit),
-                        title: new Text(AppLocalizations.of(context).tr('bottom_sheet_edit')),
+                        title: new Text(AppLocalizations.of(context)
+                            .tr('bottom_sheet_edit')),
                         onTap: () {
                           Navigator.pop(context);
                           Navigator.push(
@@ -231,7 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                     new ListTile(
                       leading: new Icon(Icons.delete),
-                      title: new Text(AppLocalizations.of(context).tr('bottom_sheet_delete')),
+                      title: new Text(AppLocalizations.of(context)
+                          .tr('bottom_sheet_delete')),
                       onTap: () {
                         _con.deleteTodo(d.id);
                         Navigator.pop(context);
@@ -249,11 +268,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Color colorSelector(category, CardColors cardColors) {
     switch (category) {
       case 1:
-        return cardColors.color2;
+        return cardColors.color1;
       case 2:
+        return cardColors.color2;
+      case 3:
         return cardColors.color3;
       default:
-        return cardColors.color1;
+        return cardColors.color0;
     }
   }
 
@@ -269,8 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Container(
                       height: 40,
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(d.title,
-                          overflow: TextOverflow.ellipsis)),
+                      child: Text(d.title, overflow: TextOverflow.ellipsis)),
                   subtitle: Container(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(d.content, overflow: TextOverflow.fade)),
@@ -297,5 +317,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(builder: (context) => EditScreen(d)));
                   },
                 ))));
+  }
+
+  buildCategoryItem(color, text, id, category) {
+    return ListTile(
+        leading: Icon(
+          Icons.fiber_manual_record,
+          color: color,
+        ),
+        title: Text(text),
+        onTap: () {
+          _con.updateCategory(id, category);
+          Navigator.pop(context);
+        });
   }
 }

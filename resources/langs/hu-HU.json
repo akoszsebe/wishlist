@@ -23,6 +23,7 @@
     "sign_out" : "Kijelentkezes"
   },
   "dialog_timepicker_title": "Riasztás hozzadasa",
+  "bottom_sheet_nocat" : "Categoria Nelkul",
   "bottom_sheet_normal": "Normalis",
   "bottom_sheet_lesimp": "Kevesbe fontos",
   "bottom_sheet_imp": "Fontos",
