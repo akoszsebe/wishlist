@@ -51,7 +51,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon" 
   ios: true
-  image_path: "resources/images/todo_icon_rect.png"
+  image_path: "resources/images/todo_icon_rect_c.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -71,6 +71,7 @@ flutter:
     - resources/images/google_logo.png
     - resources/images/todo_icon.png
     - resources/images/todo_icon_rect.png
+    - resources/images/todo_icon_rect_c.png
     - resources/images/icons_alarm.png
     - resources/images/icons_snooze.png
     
