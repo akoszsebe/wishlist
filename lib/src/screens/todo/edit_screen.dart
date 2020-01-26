@@ -84,7 +84,7 @@ class _EditScreenState extends State<EditScreen> {
                                     text: TextSpan(children: [
                                       TextSpan(
                                         text: DateFormat(
-                                                "MMM, d EEE ",
+                                                "MMM d EEE ",
                                                 AppLocalizations.of(context)
                                                     .locale
                                                     .toString())

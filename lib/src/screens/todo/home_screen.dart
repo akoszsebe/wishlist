@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Colors.white,
                           borderRadius: BorderRadius.circular(4.0)),
                       width: 40,
-                      height: 5,
+                      height: 4,
                     )),
                     buildCategoryItem(
                       cardColors.color0,

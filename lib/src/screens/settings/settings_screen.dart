@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:wishlist/util/shared_prefs.dart';
 import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/util/theme_switch.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -15,10 +16,12 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   var dropdownValue = 'en';
+  bool enableCoolStuff = false;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    enableCoolStuff = !themeProvider.isLightTheme;
     var data = EasyLocalizationProvider.of(context).data;
     if (data.savedLocale != null) dropdownValue = data.savedLocale.languageCode;
     print(dropdownValue);
@@ -27,35 +30,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(AppLocalizations.of(context).tr('settings')),
         elevation: 2,
         actions: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.brightness_3,
-                color: themeProvider.isLightTheme
-                    ? Colors.grey[400]
-                    : Colors.yellow[600],
-              ),
-              Switch(
-                value: themeProvider.isLightTheme,
-                activeColor: Colors.grey[400],
-                inactiveThumbColor: Colors.yellow[600],
-                inactiveTrackColor: Colors.yellow[200],
-                onChanged: (val) {
-                  themeProvider.setThemeData = val;
-                  SharedPrefs.setTheme(val);
-                },
-              ),
-              Icon(
-                Icons.wb_sunny,
-                color: themeProvider.isLightTheme
-                    ? Colors.yellow[600]
-                    : Colors.grey[400],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 16),
-              ),
-            ],
-          ),
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+              child: buidThemeSwitch(() => {
+                    setState(() {
+                      themeProvider.setThemeData = enableCoolStuff;
+                      SharedPrefs.setTheme(enableCoolStuff);
+                    }),
+                  })),
         ],
       ),
       body: ListView(
@@ -117,6 +99,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  buidThemeSwitch(callback) {
+    return GestureDetector(
+      onTap: callback,
+      behavior: HitTestBehavior.translucent,
+      child: SwitchlikeCheckbox(checked: enableCoolStuff),
     );
   }
 }
