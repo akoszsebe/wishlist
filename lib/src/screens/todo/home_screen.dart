@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_animations/simple_animations.dart';
 import 'package:wishlist/src/database/database_helper.dart';
+import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
@@ -129,8 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return StaggeredGridView.count(
       crossAxisCount: 4,
       children: <Widget>[
-        for (var d in data)
-          buildGridItem(d, cardColors, alarmIds.contains(d.id))
+        for (var i = 0; i < data.length; i++)
+          buildGridItem(i, data[i], cardColors, alarmIds.contains(data[i].id))
       ],
       //Do you need to go somewhere when you tap on this card, wrap using InkWell and add your route
       staggeredTiles:
@@ -278,9 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  buildGridItem(d, cardColors, bool hasAlarm) {
-    //bool alarm = await _con.getAlarm(d.id);
-    return Padding(
+  buildGridItem(index, d, cardColors, bool hasAlarm) {
+    final track = d;
+    var item = Padding(
         padding: EdgeInsets.all(4),
         child: Container(
             child: Card(
@@ -309,14 +311,48 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
-                  onLongPress: () {
-                    showModalBootomSheet(d, cardColors, hasAlarm);
-                  },
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => EditScreen(d)));
                   },
                 ))));
+    Draggable draggable = LongPressDraggable<TodoResponse>(
+      data: track,
+      maxSimultaneousDrags: 1,
+      child: item,
+      childWhenDragging: Opacity(
+        opacity: 0.3,
+        child: item,
+      ),
+      feedback: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
+        child: item,
+      ),
+    );
+    return DragTarget<TodoResponse>(
+      onWillAccept: (track) {
+        return _con.list.indexOf(track) != index;
+      },
+      onAccept: (track) {
+        setState(() {
+          int currentIndex = _con.list.indexOf(track);
+          _con.list.remove(track);
+          _con.list.insert(currentIndex > index ? index : index - 1, track);
+        });
+      },
+      builder: (BuildContext context, List<TodoResponse> candidateData,
+          List<dynamic> rejectedData) {
+        return Column(
+          children: <Widget>[
+            candidateData.isEmpty
+                ? Container()
+                : Container(height: 30), 
+            candidateData.isEmpty ? draggable : item,
+          ],
+        );
+      },
+    );
   }
 
   buildCategoryItem(color, text, id, category) {

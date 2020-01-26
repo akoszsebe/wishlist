@@ -110,12 +110,6 @@ class _AddScreenState extends State<AddScreen> {
           labelText: AppLocalizations.of(context).tr('content')),
       cursorColor: Theme.of(context).accentColor,
       onSaved: (value) => _content = value,
-      validator: (String arg) {
-        if (arg.length < 3)
-          return AppLocalizations.of(context).tr('contenttextmin');
-        else
-          return null;
-      },
     );
   }
 }
