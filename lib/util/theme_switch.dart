@@ -1,17 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-class SwitchlikeCheckbox extends StatelessWidget {
+class ThemeSwitch extends StatelessWidget {
   final bool checked;
 
-  SwitchlikeCheckbox({this.checked});
+  ThemeSwitch({this.checked});
 
   @override
   Widget build(BuildContext context) {
     var tween = MultiTrackTween([
-      Track("paddingLeft")
+      Track("paddingLeft1")
           .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 26.0)),
       Track("paddingLeft2")
           .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 19.0)),
@@ -43,7 +41,7 @@ class SwitchlikeCheckbox extends StatelessWidget {
             children: [
               Positioned(
                 child: Padding(
-                  padding: EdgeInsets.only(left: animation["paddingLeft"]),
+                  padding: EdgeInsets.only(left: animation["paddingLeft1"]),
                   child: Container(
                     decoration: _innerBoxDecoration(Colors.yellow[700]),
                     width: 20,

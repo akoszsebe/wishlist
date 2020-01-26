@@ -106,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return GestureDetector(
       onTap: callback,
       behavior: HitTestBehavior.translucent,
-      child: SwitchlikeCheckbox(checked: enableCoolStuff),
+      child: ThemeSwitch(checked: enableCoolStuff),
     );
   }
 }
