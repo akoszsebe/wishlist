@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:wishlist/src/database/alarm_database.dart';
@@ -63,7 +61,9 @@ class TodoController extends ControllerMVC {
     list = resopnse;
     alarmIds = await helper.queryAlarmIds();
     order = await SharedPrefs.getOrderList();
+    //print(order);
     list.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
+    //for (var l in list) print(l.id);
     refresh();
     return;
   }
