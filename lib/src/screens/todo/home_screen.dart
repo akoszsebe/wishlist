@@ -267,25 +267,13 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  Color colorSelector(category, CardColors cardColors) {
-    switch (category) {
-      case 1:
-        return cardColors.color1;
-      case 2:
-        return cardColors.color2;
-      case 3:
-        return cardColors.color3;
-      default:
-        return cardColors.color0;
-    }
-  }
-
   buildGridItem(index, d, cardColors, bool hasAlarm) {
+    var color = CardColors.colorSelector(d.category, cardColors);
     var item = Padding(
         padding: EdgeInsets.all(4),
         child: Container(
             child: Card(
-                color: colorSelector(d.category, cardColors),
+                color: color,
                 child: ListTile(
                   key: Key(d.id.toString()),
                   title: Container(
@@ -312,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditScreen(d)));
+                        MaterialPageRoute(builder: (context) => EditScreen(d,color: color)));
                   },
                 ))));
     Draggable draggable = LongPressDraggable<TodoResponse>(
