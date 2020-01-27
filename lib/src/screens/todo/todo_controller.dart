@@ -29,6 +29,7 @@ class TodoController extends ControllerMVC {
   UserModel userData;
   List<int> alarmIds;
   AlarmModel currentAlarm;
+  List<int> order = [];
 
   final TodoApiProvider todoApiProvider = TodoApiProvider();
   final NotificationApiProvider notificationApiProvider =
@@ -59,7 +60,10 @@ class TodoController extends ControllerMVC {
     });
     list = resopnse;
     alarmIds = await helper.queryAlarmIds();
-    print(alarmIds);
+    order = await SharedPrefs.getOrderList();
+    //print(order);
+    list.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
+    //for (var l in list) print(l.id);
     refresh();
     return;
   }
@@ -176,5 +180,15 @@ class TodoController extends ControllerMVC {
           'read row $alarm: ${alarm.title} ${alarm.when} ${alarm.alarmEnabled}');
       return alarm;
     }
+  }
+
+  void swapp(TodoResponse item, index) {
+    int currentIndex = list.indexOf(item);
+    list.remove(item);
+    list.insert(currentIndex > index ? index : index - 1, item);
+    refresh();
+    var tmp = List<int>();
+    for (var l in list) tmp.add(l.id);
+    SharedPrefs.setOrderList(tmp);
   }
 }

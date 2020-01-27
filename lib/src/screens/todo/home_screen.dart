@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_animations/simple_animations.dart';
 import 'package:wishlist/src/database/database_helper.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/login/account_screen.dart';
@@ -322,11 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return _con.list.indexOf(track) != index;
       },
       onAccept: (track) {
-        setState(() {
-          int currentIndex = _con.list.indexOf(track);
-          _con.list.remove(track);
-          _con.list.insert(currentIndex > index ? index : index - 1, track);
-        });
+        _con.swapp(track,index);
       },
       builder: (BuildContext context, List<TodoResponse> candidateData,
           List<dynamic> rejectedData) {

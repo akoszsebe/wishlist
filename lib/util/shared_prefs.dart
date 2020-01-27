@@ -8,6 +8,7 @@ class SharedPrefs {
   ///
   static final String _theme = "theme";
   static final String _userData = "userdata";
+  static final String _orderList = "orderlist";
 
   static Future<bool> getTheme() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,5 +32,19 @@ class SharedPrefs {
   static Future<bool> setUserData(UserModel value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setString(_userData, json.encode(value.toJson()));
+  }
+
+  static Future<bool> setOrderList(List<int> list) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(_orderList, json.encode(list));
+  }
+
+  static Future<List<int>> getOrderList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var orderlistJson = prefs.getString(_orderList);
+    if (orderlistJson != null) {
+      return (json.decode(orderlistJson) as List<dynamic>).cast<int>();
+    }
+    return [];
   }
 }
