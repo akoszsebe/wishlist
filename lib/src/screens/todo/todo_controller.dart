@@ -62,7 +62,6 @@ class TodoController extends ControllerMVC {
     });
     list = resopnse;
     alarmIds = await helper.queryAlarmIds();
-    print(alarmIds);
     order = await SharedPrefs.getOrderList();
     list.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
     refresh();
