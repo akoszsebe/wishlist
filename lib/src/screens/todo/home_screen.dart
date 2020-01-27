@@ -281,7 +281,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   buildGridItem(index, d, cardColors, bool hasAlarm) {
-    final track = d;
     var item = Padding(
         padding: EdgeInsets.all(4),
         child: Container(
@@ -317,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ))));
     Draggable draggable = LongPressDraggable<TodoResponse>(
-      data: track,
+      data: d,
       maxSimultaneousDrags: 1,
       child: item,
       childWhenDragging: Opacity(
