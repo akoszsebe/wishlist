@@ -334,11 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return _con.list.indexOf(track) != index;
       },
       onAccept: (track) {
-        setState(() {
-          int currentIndex = _con.list.indexOf(track);
-          _con.list.remove(track);
-          _con.list.insert(currentIndex > index ? index : index - 1, track);
-        });
+        _con.swapp(track,index);
       },
       builder: (BuildContext context, List<TodoResponse> candidateData,
           List<dynamic> rejectedData) {
