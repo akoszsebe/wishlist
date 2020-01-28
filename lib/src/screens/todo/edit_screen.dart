@@ -130,7 +130,7 @@ class _EditScreenState extends State<EditScreen> {
       initialValue: _todo.content,
       key: AppKeys.noteField,
       maxLines: 15,
-      style: Theme.of(context).textTheme.subhead,
+      style: Theme.of(context).textTheme.subhead.copyWith(fontWeight: FontWeight.w700),
       decoration: InputDecoration(
           border: InputBorder.none,
           hintText: AppLocalizations.of(context).tr('contenttext'),
@@ -154,7 +154,7 @@ class _EditScreenState extends State<EditScreen> {
     return TextFormField(
       initialValue: _todo.title,
       key: AppKeys.taskField,
-      style: Theme.of(context).textTheme.headline,
+      style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.w800),
       decoration: InputDecoration(
           border: InputBorder.none,
           hintText: AppLocalizations.of(context).tr('newTodotite'),
@@ -250,7 +250,7 @@ class _EditScreenState extends State<EditScreen> {
                     padding: EdgeInsets.all(0),
                     icon: Icon(Icons.alarm_off),
                     label: Text(
-                        AppLocalizations.of(context).tr('alarm.select_date')),
+                        AppLocalizations.of(context).tr('alarm.select_date'), style: TextStyle(fontWeight: FontWeight.w800),),
                     onPressed: () {
                       pickTile(context);
                     },
