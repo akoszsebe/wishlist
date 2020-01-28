@@ -10,6 +10,7 @@
   "edittitle": "Edit Todo",
   "newTodotite": "insert title",
   "todotite": "Title",
+  "colors" : "Category color",
   "contenttext": "insert content",
   "content": "Content",
   "contenttextmin": "Content must be more than 2 charater",

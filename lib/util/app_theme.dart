@@ -49,6 +49,9 @@ class CardColors {
   Color color1 = Colors.grey[100];
   Color color2 = Colors.grey[100];
   Color color3 = Colors.grey[100];
+  Color color4 = Colors.grey[100];
+  Color color5 = Colors.grey[100];
+  Color color6 = Colors.grey[100];
 
   static Color colorSelector(category, CardColors cardColors) {
     switch (category) {
@@ -58,6 +61,12 @@ class CardColors {
         return cardColors.color2;
       case 3:
         return cardColors.color3;
+      case 4:
+        return cardColors.color4;
+      case 5:
+        return cardColors.color5;
+      case 6:
+        return cardColors.color6;
       default:
         return cardColors.color0;
     }
@@ -67,12 +76,18 @@ class CardColors {
 class CardLightColors extends CardColors {
   Color color1 = Color(0xff4dd0e1);
   Color color2 = Color(0xff2196f3);
-  Color color3 = Color(0xff7986cb);
+  Color color3 = Color(0xffb1d3c5);
+  Color color4 = Color(0xfff6b99d);
+  Color color5 = Color(0xffecd4d4);
+  Color color6 = Color(0xffdeb3cf);
 }
 
 class CardDarkColors extends CardColors {
   Color color0 = Colors.grey[800];
   Color color1 = Color(0xff27B6D1);
   Color color2 = Color(0xff2196f3);
-  Color color3 = Color(0xff334CA9);
+  Color color3 = Color(0xff81a295);
+  Color color4 = Color(0xffc2896f);
+  Color color5 = Color(0xffbaa3a3);
+  Color color6 = Color(0xffac839e);
 }

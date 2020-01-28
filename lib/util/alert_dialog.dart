@@ -75,9 +75,9 @@ void showLoaderDialog(BuildContext context) {
   );
 }
 
-void showTimePickerDialog(
-    BuildContext context, String title, Function(DateTime) onOK) {
-  var _dateTime =  DateTime.now();
+void showTimePickerDialog(BuildContext context, String title, bool showCancel,
+    Function(DateTime) onOK, VoidCallback onCancel) {
+  var _dateTime = DateTime.now();
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -90,36 +90,53 @@ void showTimePickerDialog(
           height: 220,
           child: DateTimePickerWidget(
             minDateTime: DateTime.parse(DateTime.now().toString()),
-                maxDateTime: DateTime.parse(DateTime.now().add(Duration(days: 7)).toString()),
-                initDateTime: _dateTime,
-                dateFormat: 'yyyy-MM-dd HH:mm',
-                pickerTheme: DateTimePickerTheme(
-                  backgroundColor: Colors.transparent,
-                  itemHeight: 50,
-                  title: Text(title),
-                  pickerHeight: 200,
-                  confirmTextStyle: TextStyle(color: Theme.of(context).textTheme.display1.color),
-                  itemTextStyle: TextStyle(color: Theme.of(context).textTheme.display1.color)
-                ),
+            maxDateTime: DateTime.parse(
+                DateTime.now().add(Duration(days: 7)).toString()),
+            initDateTime: _dateTime,
+            dateFormat: 'yyyy-MM-dd HH:mm',
+            pickerTheme: DateTimePickerTheme(
+                backgroundColor: Colors.transparent,
+                itemHeight: 50,
+                title: Text(title),
+                pickerHeight: 200,
+                confirmTextStyle: TextStyle(
+                    color: Theme.of(context).textTheme.display1.color),
+                itemTextStyle: TextStyle(
+                    color: Theme.of(context).textTheme.display1.color)),
             onChange: (dateTime, selectedIndex) {
-              dateTime = DateTime(dateTime.year, dateTime.month,dateTime.day,dateTime.hour,dateTime.minute);
+              dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
+                  dateTime.hour, dateTime.minute);
               print(dateTime);
-                _dateTime = dateTime;
+              _dateTime = dateTime;
             },
           ),
         ),
         actions: <Widget>[
           Container(
-              width: MediaQuery.of(context).size.width - 96,
-              child: Center(child: 
-                    new FlatButton(
-                      child: new Text("Ok"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        onOK(_dateTime);
-                      },
-                    ),
-                  )),
+            width: MediaQuery.of(context).size.width - 96,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                if (showCancel)
+                  new FlatButton(
+                    textColor: Theme.of(context).primaryColorDark,
+                    child: new Text("Delete Existing"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onCancel();
+                    },
+                  ),
+                new FlatButton(
+                  child: new Text("Set New"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onOK(_dateTime);
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       );
     },

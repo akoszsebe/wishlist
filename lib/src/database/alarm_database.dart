@@ -23,6 +23,13 @@ class AlarmDatabase {
     return id;
   }
 
+  Future<bool> deleteAlarm(int id) async {
+    Database db = await helper.database;
+    int rows =
+        await db.delete(helper.tableAlarms, where: '_id = ?', whereArgs: [id]);
+    return rows != 0;
+  }
+
   Future<AlarmModel> queryAlarm(int id) async {
     print(id);
     Database db = await helper.database;
@@ -41,7 +48,8 @@ class AlarmDatabase {
     final Database db = await helper.database;
 
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query('${helper.tableAlarms}');
+    final List<Map<String, dynamic>> maps =
+        await db.query('${helper.tableAlarms}');
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
@@ -54,12 +62,12 @@ class AlarmDatabase {
     final Database db = await helper.database;
 
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query('${helper.tableAlarms}');
+    final List<Map<String, dynamic>> maps =
+        await db.query('${helper.tableAlarms}');
     print(maps);
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
       return maps[i]['_id'];
     });
   }
-
 }

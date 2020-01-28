@@ -181,30 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 40,
                       height: 4,
                     )),
-                    buildCategoryItem(
-                      cardColors.color0,
-                      AppLocalizations.of(context).tr('bottom_sheet_nocat'),
-                      d.id,
-                      0,
-                    ),
-                    buildCategoryItem(
-                      cardColors.color1,
-                      AppLocalizations.of(context).tr('bottom_sheet_normal'),
-                      d.id,
-                      1,
-                    ),
-                    buildCategoryItem(
-                      cardColors.color2,
-                      AppLocalizations.of(context).tr('bottom_sheet_lesimp'),
-                      d.id,
-                      2,
-                    ),
-                    buildCategoryItem(
-                      cardColors.color3,
-                      AppLocalizations.of(context).tr('bottom_sheet_imp'),
-                      d.id,
-                      3,
-                    ),
                     new ListTile(
                         leading: new Icon(Icons.notifications),
                         title: new Text(AppLocalizations.of(context)
@@ -226,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               AppLocalizations.of(context)
                                   .tr('dialog_timepicker_title'),
-                              (dateTime) async {
+                              false, (dateTime) async {
                             showLoaderDialog(context);
                             await _con.insertOrUpdateAlarm(
                                 dateTime, d.id, d.title, () {
@@ -235,6 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 action: hasAlarm
                                     ? DatabaseActions.update
                                     : DatabaseActions.insert);
+                          }, () {
+                            _con.deleteAlarm(d.id, () {
+                              Navigator.pop(context);
+                            });
                           });
                         }),
                     new ListTile(
@@ -298,8 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditScreen(d,color: color)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditScreen(d, color: color)));
                   },
                 ))));
     Draggable draggable = LongPressDraggable<TodoResponse>(
@@ -321,32 +303,17 @@ class _HomeScreenState extends State<HomeScreen> {
         return _con.list.indexOf(track) != index;
       },
       onAccept: (track) {
-        _con.swapp(track,index);
+        _con.swapp(track, index);
       },
       builder: (BuildContext context, List<TodoResponse> candidateData,
           List<dynamic> rejectedData) {
         return Column(
           children: <Widget>[
-            candidateData.isEmpty
-                ? Container()
-                : Container(height: 30), 
+            candidateData.isEmpty ? Container() : Container(height: 30),
             candidateData.isEmpty ? draggable : item,
           ],
         );
       },
     );
-  }
-
-  buildCategoryItem(color, text, id, category) {
-    return ListTile(
-        leading: Icon(
-          Icons.fiber_manual_record,
-          color: color,
-        ),
-        title: Text(text),
-        onTap: () {
-          _con.updateCategory(id, category);
-          Navigator.pop(context);
-        });
   }
 }

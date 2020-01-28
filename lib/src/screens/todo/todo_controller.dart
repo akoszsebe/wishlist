@@ -68,11 +68,11 @@ class TodoController extends ControllerMVC {
     return;
   }
 
-  Future<void> saveTodo(String title, String content) async {
+  Future<void> saveTodo(String title, String content, int category) async {
     list = null;
     await todoApiProvider
         .addTodo(TodoRequest(
-            title: title, content: content, userId: userData.userId))
+            title: title, content: content, userId: userData.userId, category: category))
         .catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
@@ -87,18 +87,13 @@ class TodoController extends ControllerMVC {
     }).then((onValue) => {loadData()});
   }
 
-  Future<void> update(int id, String title, String content) async {
+  Future<void> update(
+      int id, String title, String content, int category) async {
     list = null;
     await todoApiProvider
-        .updateTodo(UpdateTodoRequest(id: id, title: title, content: content))
+        .updateTodo(UpdateTodoRequest(
+            id: id, title: title, content: content, category: category))
         .catchError((error) {
-      throw error;
-    }).then((onValue) => {loadData()});
-  }
-
-  Future<void> updateCategory(int id, int category) async {
-    list = null;
-    await todoApiProvider.updateTodoCategory(id, category).catchError((error) {
       throw error;
     }).then((onValue) => {loadData()});
   }
@@ -142,11 +137,9 @@ class TodoController extends ControllerMVC {
     callback();
   }
 
-  Future<void> disableAlarm(
-      DateTime when, int id, String title, VoidCallback callback,
-      {DatabaseActions action = DatabaseActions.insert}) async {
+  Future<void> deleteAlarm(int id, VoidCallback callback) async {
     await cancelAlarm(id);
-    await updateAlarm(when, id, title, alarmEnabled: false);
+    await _deleteAlarmFromDb(id);
     refresh();
     callback();
   }
@@ -168,6 +161,10 @@ class TodoController extends ControllerMVC {
         when: when.millisecondsSinceEpoch,
         alarmEnabled: alarmEnabled);
     await helper.updateAlarm(alarm);
+  }
+
+  Future<void> _deleteAlarmFromDb(int id) async {
+    await helper.deleteAlarm(id);
   }
 
   Future<AlarmModel> existsAlarm(id) async {

@@ -69,20 +69,4 @@ class TodoApiProvider extends ApiProvider {
       throw ApiExeption.fromDioError(e);
     }
   }
-
-  Future<bool> updateTodoCategory(int todoId, int category) async {
-    try {
-      String firebaseDeviceId = SessionRepository().getFirebaseDeviceId();
-      await dio.post(baseUrl + "/todo/update/category",
-          data: {"id": todoId, "category": category},
-          options: Options(
-              headers: {"DeviceId": firebaseDeviceId},
-              contentType: ContentType.parse("application/json")),
-          cancelToken: token);
-      return true;
-    } on DioError catch (e) {
-      print("Exception occured: $e");
-      throw ApiExeption.fromDioError(e);
-    }
-  }
 }

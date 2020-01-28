@@ -28,10 +28,11 @@ class _EditScreenState extends State<EditScreen> {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TodoResponse _todo;
-  final Color color;
   final TodoController _con = TodoController.con;
+  Color color;
   String _title;
   String _content;
+  int _category;
 
   _EditScreenState(this._todo, {this.color});
 
@@ -55,14 +56,14 @@ class _EditScreenState extends State<EditScreen> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(right: 16),
               child: ButtonTheme(
-                  height: 32,
+                  height: 24,
                   buttonColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   child: FlatButton(
                     child: Text(
                       AppLocalizations.of(context).tr('updatetodo'),
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 15,
                         color: color,
                       ),
                     ),
@@ -70,7 +71,7 @@ class _EditScreenState extends State<EditScreen> {
                       final form = formKey.currentState;
                       if (form.validate()) {
                         form.save();
-                        _con.update(_todo.id, _title, _content);
+                        _con.update(_todo.id, _title, _content, _category);
                         Navigator.pop(context);
                       }
                     },
@@ -94,8 +95,11 @@ class _EditScreenState extends State<EditScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   buildTitleFormField(),
+                  Padding(padding: EdgeInsets.only(top: 8)),
                   buildColorsField(),
+                  Padding(padding: EdgeInsets.only(top: 8)),
                   buildContentFormField(),
+                  Padding(padding: EdgeInsets.only(top: 8)),
                   buildAlarmField(),
                 ],
               ),
@@ -109,8 +113,9 @@ class _EditScreenState extends State<EditScreen> {
   void pickTile(BuildContext context,
       {DatabaseActions action = DatabaseActions.insert}) {
     showTimePickerDialog(
-        context, AppLocalizations.of(context).tr('dialog_timepicker_title'),
-        (dateTime) async {
+        context,
+        AppLocalizations.of(context).tr('dialog_timepicker_title'),
+        _con.currentAlarm != null, (dateTime) async {
       showLoaderDialog(context);
       await _con.insertOrUpdateAlarm(
           dateTime, _todo.id, _title == null ? _todo.title : _title, () {
@@ -122,6 +127,10 @@ class _EditScreenState extends State<EditScreen> {
         });
         Navigator.pop(context);
       }, action: action);
+    }, () {
+      _con.deleteAlarm(_todo.id, () {
+        Navigator.pop(context);
+      });
     });
   }
 
@@ -129,7 +138,9 @@ class _EditScreenState extends State<EditScreen> {
     return TextFormField(
       initialValue: _todo.content,
       key: AppKeys.noteField,
-      maxLines: 15,
+      maxLines: null,
+      minLines: null,
+      expands: false,
       style: Theme.of(context).textTheme.subhead,
       decoration: InputDecoration(
           border: InputBorder.none,
@@ -137,16 +148,11 @@ class _EditScreenState extends State<EditScreen> {
           contentPadding: EdgeInsets.all(16),
           labelText: AppLocalizations.of(context).tr('content'),
           labelStyle: TextStyle(
+              fontSize: 21,
               color:
-                  Theme.of(context).textTheme.headline.color.withOpacity(0.3))),
+                  Theme.of(context).textTheme.headline.color.withOpacity(0.5))),
       cursorColor: Theme.of(context).accentColor,
       onSaved: (value) => _content = value,
-      validator: (String arg) {
-        if (arg.length < 3)
-          return AppLocalizations.of(context).tr('contenttextmin');
-        else
-          return null;
-      },
     );
   }
 
@@ -162,7 +168,7 @@ class _EditScreenState extends State<EditScreen> {
           labelText: AppLocalizations.of(context).tr('todotite'),
           labelStyle: TextStyle(
               color:
-                  Theme.of(context).textTheme.headline.color.withOpacity(0.3))),
+                  Theme.of(context).textTheme.headline.color.withOpacity(0.5))),
       cursorColor: Theme.of(context).accentColor,
       onSaved: (value) => _title = value,
       validator: (String arg) {
@@ -189,7 +195,7 @@ class _EditScreenState extends State<EditScreen> {
                       .textTheme
                       .headline
                       .color
-                      .withOpacity(0.3)),
+                      .withOpacity(0.5)),
             ),
             _con.currentAlarm != null
                 ? Material(
@@ -202,15 +208,14 @@ class _EditScreenState extends State<EditScreen> {
                           text: TextSpan(children: [
                             TextSpan(
                               text: DateFormat(
-                                      "MMM d EEE ",
+                                      "MMMM d EEEE ",
                                       AppLocalizations.of(context)
                                           .locale
                                           .toString())
                                   .format(DateTime.fromMillisecondsSinceEpoch(
                                       _con.currentAlarm.when)),
                               style: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.display1.color,
+                                color: Theme.of(context).primaryColorDark,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -226,7 +231,7 @@ class _EditScreenState extends State<EditScreen> {
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Theme.of(context).primaryColorDark,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             TextSpan(
@@ -255,42 +260,6 @@ class _EditScreenState extends State<EditScreen> {
                       pickTile(context);
                     },
                   ),
-            // Switch(
-            //   value: _con.currentAlarm != null
-            //       ? _con.currentAlarm.alarmEnabled
-            //       : false,
-            //   activeColor: Theme.of(context).accentColor,
-            //   onChanged: (val) {
-            //     setState(() async {
-            //       if (_con.currentAlarm != null) {
-            //         if (val == false) {
-            //           _con.disableAlarm(
-            //               DateTime.fromMillisecondsSinceEpoch(
-            //                   _con.currentAlarm.when),
-            //               _con.currentAlarm.id,
-            //               _con.currentAlarm.title, () {
-            //             _con.currentAlarm.alarmEnabled = val;
-            //           });
-            //         } else {
-            //           await _con.insertOrUpdateAlarm(
-            //               DateTime.fromMillisecondsSinceEpoch(
-            //                   _con.currentAlarm.when),
-            //               _con.currentAlarm.id,
-            //               _title == null ? _todo.title : _title, () {
-            //             _con.initAlarm(_todo.id);
-            //             setState(() {
-            //               if (_con.currentAlarm != null) {
-            //                 _con.currentAlarm.alarmEnabled = true;
-            //               }
-            //             });
-            //           }, action: DatabaseActions.update);
-            //         }
-            //       } else {
-            //         pickTile(context);
-            //       }
-            //     });
-            //   },
-            // ),
           ],
         ));
   }
@@ -313,25 +282,30 @@ class _EditScreenState extends State<EditScreen> {
                       .textTheme
                       .headline
                       .color
-                      .withOpacity(0.3)),
+                      .withOpacity(0.5)),
             ),
-            Padding(padding: EdgeInsets.only(top: 5),),
+            Padding(
+              padding: EdgeInsets.only(top: 5),
+            ),
             Wrap(
               spacing: 10,
               crossAxisAlignment: WrapCrossAlignment.start,
               alignment: WrapAlignment.center,
               children: <Widget>[
-                colorButton(cardColors.color0),
-                colorButton(cardColors.color1),
-                colorButton(cardColors.color2),
-                colorButton(cardColors.color3),
+                colorButton(cardColors.color0, 0),
+                colorButton(cardColors.color1, 1),
+                colorButton(cardColors.color2, 2),
+                colorButton(cardColors.color3, 3),
+                colorButton(cardColors.color4, 4),
+                colorButton(cardColors.color5, 5),
+                colorButton(cardColors.color6, 6),
               ],
             )
           ],
         ));
   }
 
-  colorButton(color) {
+  colorButton(color, int category) {
     return ClipOval(
       child: Material(
         color: color != this.color
@@ -349,7 +323,12 @@ class _EditScreenState extends State<EditScreen> {
                   color: color,
                 )),
               )),
-          onTap: () {},
+          onTap: () {
+            _category = category;
+            setState(() {
+              this.color = color;
+            });
+          },
         ),
       ),
     );
