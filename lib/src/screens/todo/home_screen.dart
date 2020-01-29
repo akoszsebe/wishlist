@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return <Widget>[
                   SliverAppBar(
                       floating: false,
-                      pinned: true,
+                      pinned: false,
                       bottom: buildTabBar(),
                       backgroundColor: Colors.transparent,
                       title: Padding(
@@ -232,7 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EditScreen(d)));
+                                  builder: (context) => EditScreen(d,
+                                      color: CardColors.colorSelector(
+                                          d.category, cardColors))));
                         }),
                     new ListTile(
                       leading: new Icon(Icons.delete),

@@ -7,16 +7,16 @@ class AppTheme {
     final accentIconTheme = ThemeData.dark().accentIconTheme;
 
     return ThemeData.dark().copyWith(
-        primaryColor: Colors.grey[900],
-        primaryColorLight: Colors.grey[800],
+        primaryColor: Colors.black,
+        primaryColorLight: Colors.grey[900],
         primaryColorDark: Colors.white,
-        accentColor: Colors.cyan[600],
+        accentColor: Colors.cyan[700],
         buttonColor: Colors.grey[900],
         accentIconTheme: accentIconTheme.copyWith(color: Colors.white),
         textSelectionColor: Colors.cyan[200],
         cardColor: Colors.white.withOpacity(0.15),
-        backgroundColor: Colors.grey[900],
-        scaffoldBackgroundColor: Colors.grey[900],
+        backgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
         toggleableActiveColor: Colors.cyan[300],
         textTheme: originalTextTheme.copyWith(
             body1:
@@ -83,7 +83,7 @@ class CardLightColors extends CardColors {
 }
 
 class CardDarkColors extends CardColors {
-  Color color0 = Colors.grey[800];
+  Color color0 = Colors.grey[900];
   Color color1 = Color(0xff27B6D1);
   Color color2 = Color(0xff2196f3);
   Color color3 = Color(0xff81a295);

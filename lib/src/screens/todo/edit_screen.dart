@@ -40,6 +40,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   void initState() {
     super.initState();
+    _category = _todo.category;
     _con.initAlarm(_todo.id);
   }
 
