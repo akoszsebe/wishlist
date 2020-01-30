@@ -76,6 +76,8 @@ flutter:
     - resources/images/todo_icon_rect_c.png
     - resources/images/icons_alarm.png
     - resources/images/icons_snooze.png
+    - resources/images/rabbit_n.png
+    - resources/images/rabbit_d.jpg
     
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
