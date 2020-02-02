@@ -11,7 +11,6 @@ import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/add_screen.dart';
-import 'package:wishlist/src/screens/settings/settings_screen.dart';
 import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_theme.dart';
 import 'package:wishlist/util/theme_provider.dart';
@@ -68,14 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   SliverAppBar(
                       floating: false,
                       pinned: false,
-                      bottom: buildTabBar(),
-                      backgroundColor: Colors.transparent,
                       title: Padding(
                           padding: EdgeInsets.only(top: 20),
                           child: Text(AppLocalizations.of(context).tr('title'),
                               style: TextStyle(
-                                  fontSize: 30.0,
+                                  fontSize: 28.0,
                                   fontWeight: FontWeight.w800))),
+                      bottom: buildTabBar(),
+                      backgroundColor: Colors.transparent,
                       actions: <Widget>[
                         IconButton(
                           icon: ClipRRect(
@@ -103,16 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (context) => AccountScreen()));
                           },
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.settings),
-                          tooltip: 'Add new entry',
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SettingsScreen()));
-                          },
-                        ),
                       ]),
                 ];
               },
@@ -134,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     CardColors cardColors =
         themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
     return StaggeredGridView.count(
+      padding: EdgeInsets.only(left: 4, right: 4, top: 4),
       crossAxisCount: 4,
       children: <Widget>[
         for (var i = 0; i < data.length; i++)
@@ -257,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
   buildGridItem(index, d, cardColors, bool hasAlarm) {
     var color = CardColors.colorSelector(d.category, cardColors);
     var item = Padding(
-        padding: EdgeInsets.all(4),
+        padding: EdgeInsets.only(bottom: 4),
         child: Container(
             child: Card(
                 color: color,

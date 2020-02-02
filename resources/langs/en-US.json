@@ -4,6 +4,7 @@
   "language": "Language",
   "light": "Light",
   "dark": "Dark",
+  "theme" : "Theme",
   "nodata": "No todo",
   "addtitle": "Add Todo",
   "updatetodo": "Save",

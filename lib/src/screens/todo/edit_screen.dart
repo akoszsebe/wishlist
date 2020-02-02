@@ -1,14 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:wishlist/src/database/database_helper.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/util/alert_dialog.dart';
 import 'package:wishlist/util/app_keys.dart';
 import 'package:intl/intl.dart';
-import 'package:wishlist/util/app_theme.dart';
-import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/util/widgets.dart';
 
 class EditScreen extends StatefulWidget {
   final TodoResponse todo;
@@ -47,68 +45,53 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color,
-      appBar: AppBar(
         backgroundColor: color,
-        title: Text(AppLocalizations.of(context).tr('edittitle')),
-        elevation: 0,
-        actions: <Widget>[
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(right: 16),
-              child: ButtonTheme(
-                  height: 24,
-                  buttonColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: FlatButton(
-                    child: Text(
-                      AppLocalizations.of(context).tr('updatetodo'),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: color,
-                      ),
-                    ),
-                    onPressed: () {
-                      final form = formKey.currentState;
-                      if (form.validate()) {
-                        form.save();
-                        _con.update(_todo.id, _title, _content, _category);
-                        Navigator.pop(context);
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                    color: Theme.of(context).primaryColorDark,
-                  ))),
-        ],
-      ),
-      body: Form(
-        key: formKey,
-        autovalidate: false,
-        onWillPop: () {
-          return Future(() => true);
-        },
-        child: ListView(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 16, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  buildTitleFormField(),
-                  Padding(padding: EdgeInsets.only(top: 8)),
-                  buildColorsField(),
-                  Padding(padding: EdgeInsets.only(top: 8)),
-                  buildContentFormField(),
-                  Padding(padding: EdgeInsets.only(top: 8)),
-                  buildAlarmField(),
-                ],
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          backgroundColor: color,
+          elevation: 0,
         ),
-      ),
-    );
+        body: Form(
+          key: formKey,
+          autovalidate: false,
+          onWillPop: () {
+            return Future(() => true);
+          },
+          child: ListView(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 16, bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    buildTitleFormField(),
+                    Padding(padding: EdgeInsets.only(top: 8)),
+                    buildColorSelector(context, color, (index, color) {
+                      _category = index;
+                      setState(() {
+                        this.color = color;
+                      });
+                    }),
+                    Padding(padding: EdgeInsets.only(top: 8)),
+                    buildContentFormField(),
+                    Padding(padding: EdgeInsets.only(top: 8)),
+                    buildAlarmField(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(left: 32),
+          child: buildButton(AppLocalizations.of(context).tr('updatetodo'), () {
+            final form = formKey.currentState;
+            if (form.validate()) {
+              form.save();
+              _con.update(_todo.id, _title, _content, _category);
+              Navigator.pop(context);
+            }
+          }, color, Theme.of(context).primaryColorDark),
+        ));
   }
 
   void pickTile(BuildContext context,
@@ -142,7 +125,10 @@ class _EditScreenState extends State<EditScreen> {
       maxLines: null,
       minLines: null,
       expands: false,
-      style: Theme.of(context).textTheme.subhead.copyWith(fontWeight: FontWeight.w700),
+      style: Theme.of(context)
+          .textTheme
+          .subhead
+          .copyWith(fontWeight: FontWeight.w700),
       decoration: InputDecoration(
           border: InputBorder.none,
           hintText: AppLocalizations.of(context).tr('contenttext'),
@@ -161,7 +147,10 @@ class _EditScreenState extends State<EditScreen> {
     return TextFormField(
       initialValue: _todo.title,
       key: AppKeys.taskField,
-      style: Theme.of(context).textTheme.headline.copyWith(fontWeight: FontWeight.w800),
+      style: Theme.of(context)
+          .textTheme
+          .headline
+          .copyWith(fontWeight: FontWeight.w800),
       decoration: InputDecoration(
           border: InputBorder.none,
           hintText: AppLocalizations.of(context).tr('newTodotite'),
@@ -256,82 +245,14 @@ class _EditScreenState extends State<EditScreen> {
                     padding: EdgeInsets.all(0),
                     icon: Icon(Icons.alarm_off),
                     label: Text(
-                        AppLocalizations.of(context).tr('alarm.select_date'), style: TextStyle(fontWeight: FontWeight.w800),),
+                      AppLocalizations.of(context).tr('alarm.select_date'),
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
                     onPressed: () {
                       pickTile(context);
                     },
                   ),
           ],
         ));
-  }
-
-  buildColorsField() {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    CardColors cardColors =
-        themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
-    return Padding(
-        padding: EdgeInsets.only(left: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              AppLocalizations.of(context).tr('colors'),
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context)
-                      .textTheme
-                      .headline
-                      .color
-                      .withOpacity(0.5)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-            ),
-            Wrap(
-              spacing: 10,
-              crossAxisAlignment: WrapCrossAlignment.start,
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                colorButton(cardColors.color0, 0),
-                colorButton(cardColors.color1, 1),
-                colorButton(cardColors.color2, 2),
-                colorButton(cardColors.color3, 3),
-                colorButton(cardColors.color4, 4),
-                colorButton(cardColors.color5, 5),
-                colorButton(cardColors.color6, 6),
-              ],
-            )
-          ],
-        ));
-  }
-
-  colorButton(color, int category) {
-    return ClipOval(
-      child: Material(
-        color: color != this.color
-            ? Colors.transparent
-            : Theme.of(context).primaryColorDark,
-        elevation: 0,
-        child: InkWell(
-          child: Padding(
-              padding: EdgeInsets.all(2),
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: ClipOval(
-                    child: Material(
-                  color: color,
-                )),
-              )),
-          onTap: () {
-            _category = category;
-            setState(() {
-              this.color = color;
-            });
-          },
-        ),
-      ),
-    );
   }
 }
