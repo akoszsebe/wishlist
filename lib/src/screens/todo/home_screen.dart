@@ -321,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   buildTabBar() {
     return PreferredSize(
-        preferredSize: Size.fromHeight(60),
+        preferredSize: Size.fromHeight(48),
         child: Row(children: <Widget>[
           TabBar(
               isScrollable: true,

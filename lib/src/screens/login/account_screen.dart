@@ -166,18 +166,15 @@ class _AccountScreenState extends StateMVC<AccountScreen>
                         title: Text(AppLocalizations.of(context).tr('theme')),
                         trailing: Container(
                             width: 54,
-                            child: buidThemeSwitch(() => {
-                                  setState(() {
-                                    if (enableCoolStuff) {
-                                      _animationController.forward();
-                                    } else {
-                                      _animationController.reverse();
-                                    }
-                                    themeProvider.setThemeData =
-                                        enableCoolStuff;
-                                    SharedPrefs.setTheme(enableCoolStuff);
-                                  }),
-                                }))),
+                            child: buidThemeSwitch(() {
+                              if (enableCoolStuff) {
+                                _animationController.forward();
+                              } else {
+                                _animationController.reverse();
+                              }
+                              themeProvider.setThemeData = enableCoolStuff;
+                              SharedPrefs.setTheme(enableCoolStuff);
+                            }))),
                     Padding(
                         padding: EdgeInsets.only(top: 8, left: 16, right: 16),
                         child: Container(

@@ -74,20 +74,20 @@ class CardColors {
 }
 
 class CardLightColors extends CardColors {
-  Color color1 = Color(0xff4dd0e1);
-  Color color2 = Color(0xff2196f3);
-  Color color3 = Color(0xffb1d3c5);
-  Color color4 = Color(0xfff6b99d);
-  Color color5 = Color(0xffecd4d4);
+  Color color1 = Color(0xff86e3ce);
+  Color color2 = Color(0xffd0e6a5);
+  Color color3 = Color(0xffffdd94);
+  Color color4 = Color(0xfffa897b);
+  Color color5 = Color(0xffccabd8);
   Color color6 = Color(0xffdeb3cf);
 }
 
 class CardDarkColors extends CardColors {
   Color color0 = Colors.grey[900];
-  Color color1 = Color(0xff27B6D1);
-  Color color2 = Color(0xff2196f3);
-  Color color3 = Color(0xff81a295);
-  Color color4 = Color(0xffc2896f);
-  Color color5 = Color(0xffbaa3a3);
+  Color color1 = Color(0xff53b19d);
+  Color color2 = Color(0xff9eb476);
+  Color color3 = Color(0xffcaab65);
+  Color color4 = Color(0xffc35a4f);
+  Color color5 = Color(0xff9b7ca6);
   Color color6 = Color(0xffac839e);
 }

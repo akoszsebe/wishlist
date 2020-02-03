@@ -22,76 +22,94 @@ class EditScreen extends StatefulWidget {
   _EditScreenState createState() => _EditScreenState(todo, color: color);
 }
 
-class _EditScreenState extends State<EditScreen> {
+class _EditScreenState extends State<EditScreen>
+    with SingleTickerProviderStateMixin {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TodoResponse _todo;
   final TodoController _con = TodoController.con;
-  Color color;
   String _title;
   String _content;
   int _category;
+
+  Color color;
+  Color lastColor;
+  AnimationController _animationController;
+  Animation<Color> background;
 
   _EditScreenState(this._todo, {this.color});
 
   @protected
   @override
   void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
     super.initState();
     _category = _todo.category;
     _con.initAlarm(_todo.id);
+    lastColor = color;
+    setBackgroundColor(lastColor, color);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: color,
-        appBar: AppBar(
-          backgroundColor: color,
-          elevation: 0,
-        ),
-        body: Form(
-          key: formKey,
-          autovalidate: false,
-          onWillPop: () {
-            return Future(() => true);
-          },
-          child: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.only(top: 16, bottom: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    buildTitleFormField(),
-                    Padding(padding: EdgeInsets.only(top: 8)),
-                    buildColorSelector(context, color, (index, color) {
-                      _category = index;
-                      setState(() {
-                        this.color = color;
-                      });
-                    }),
-                    Padding(padding: EdgeInsets.only(top: 8)),
-                    buildContentFormField(),
-                    Padding(padding: EdgeInsets.only(top: 8)),
-                    buildAlarmField(),
+    lastColor = color;
+    return AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Scaffold(
+              backgroundColor: background.value,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+              ),
+              body: Form(
+                key: formKey,
+                autovalidate: false,
+                onWillPop: () {
+                  return Future(() => true);
+                },
+                child: ListView(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(top: 16, bottom: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          buildTitleFormField(),
+                          Padding(padding: EdgeInsets.only(top: 8)),
+                          buildColorSelector(context, color, (index, color) {
+                            this.color = color;
+                            setBackgroundColor(lastColor, color);
+                            _category = index;
+                            _animationController.reset();
+                            _animationController.forward();
+                          }),
+                          Padding(padding: EdgeInsets.only(top: 8)),
+                          buildContentFormField(),
+                          Padding(padding: EdgeInsets.only(top: 8)),
+                          buildAlarmField(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-        floatingActionButton: Padding(
-          padding: EdgeInsets.only(left: 32),
-          child: buildButton(AppLocalizations.of(context).tr('updatetodo'), () {
-            final form = formKey.currentState;
-            if (form.validate()) {
-              form.save();
-              _con.update(_todo.id, _title, _content, _category);
-              Navigator.pop(context);
-            }
-          }, color, Theme.of(context).primaryColorDark),
-        ));
+              floatingActionButton: Padding(
+                padding: EdgeInsets.only(left: 32),
+                child: buildButton(
+                    AppLocalizations.of(context).tr('updatetodo'), () {
+                  final form = formKey.currentState;
+                  if (form.validate()) {
+                    form.save();
+                    _con.update(_todo.id, _title, _content, _category);
+                    Navigator.pop(context);
+                  }
+                }, color, Theme.of(context).primaryColorDark),
+              ));
+        });
   }
 
   void pickTile(BuildContext context,
@@ -254,5 +272,15 @@ class _EditScreenState extends State<EditScreen> {
                   ),
           ],
         ));
+  }
+
+  void setBackgroundColor(Color color1, Color color2) {
+    background = ColorTween(
+      begin: color1,
+      end: color2,
+    ).animate(_animationController)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 }

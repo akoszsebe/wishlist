@@ -19,13 +19,27 @@ class AddScreen extends StatefulWidget {
   _AddScreenState createState() => _AddScreenState();
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _AddScreenState extends State<AddScreen>
+    with SingleTickerProviderStateMixin {
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TodoController _con = TodoController.con;
   String _title;
   String _content;
   int _category = 0;
+  
   Color color;
+  Color lastColor;
+  AnimationController _animationController;
+  Animation<Color> background;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,52 +48,60 @@ class _AddScreenState extends State<AddScreen> {
       CardColors cardColors =
           themeProvider.isLightTheme ? CardLightColors() : CardDarkColors();
       color = cardColors.color0;
+      setBackgroundColor(lastColor, color);
     }
-
-    return Scaffold(
-        backgroundColor: color,
-        appBar: AppBar(
-          backgroundColor: color,
-          elevation: 0,
-        ),
-        body: Form(
-          key: formKey,
-          autovalidate: false,
-          onWillPop: () {
-            return Future(() => true);
-          },
-          child: ListView(
-            children: [
-              Container(
-                  padding: EdgeInsets.only(top: 16, bottom: 16),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        buildTitleFormFieled(),
-                        Padding(padding: EdgeInsets.only(top: 8)),
-                        buildColorSelector(context, color, (index, color) {
-                          _category = index;
-                          setState(() {
-                            this.color = color;
-                          });
-                        }),
-                        Padding(padding: EdgeInsets.only(top: 8)),
-                        buildContentFormFieled(),
-                      ])),
-            ],
-          ),
-        ),
-        floatingActionButton: Padding(
-          padding: EdgeInsets.only(left: 32),
-          child: buildButton(AppLocalizations.of(context).tr('addtodo'), () {
-            final form = formKey.currentState;
-            if (form.validate()) {
-              form.save();
-              _con.saveTodo(_title, _content, _category);
-              Navigator.pop(context);
-            }
-          }, color, Theme.of(context).primaryColorDark),
-        ));
+    lastColor = color;
+    return AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Scaffold(
+              backgroundColor: background.value,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+              ),
+              body: Form(
+                key: formKey,
+                autovalidate: false,
+                onWillPop: () {
+                  return Future(() => true);
+                },
+                child: ListView(
+                  children: [
+                    Container(
+                        padding: EdgeInsets.only(top: 16, bottom: 16),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              buildTitleFormFieled(),
+                              Padding(padding: EdgeInsets.only(top: 8)),
+                              buildColorSelector(context, color,
+                                  (index, color) {
+                                this.color = color;
+                                setBackgroundColor(lastColor, color);
+                                _category = index;
+                                _animationController.reset();
+                                _animationController.forward();
+                              }),
+                              Padding(padding: EdgeInsets.only(top: 8)),
+                              buildContentFormFieled(),
+                            ])),
+                  ],
+                ),
+              ),
+              floatingActionButton: Padding(
+                padding: EdgeInsets.only(left: 32),
+                child:
+                    buildButton(AppLocalizations.of(context).tr('addtodo'), () {
+                  final form = formKey.currentState;
+                  if (form.validate()) {
+                    form.save();
+                    _con.saveTodo(_title, _content, _category);
+                    Navigator.pop(context);
+                  }
+                }, color, Theme.of(context).primaryColorDark),
+              ));
+        });
   }
 
   Widget buildTitleFormFieled() {
@@ -126,5 +148,15 @@ class _AddScreenState extends State<AddScreen> {
       cursorColor: Theme.of(context).accentColor,
       onSaved: (value) => _content = value,
     );
+  }
+
+  void setBackgroundColor(Color color1, Color color2) {
+    background = ColorTween(
+      begin: color1,
+      end: color2,
+    ).animate(_animationController)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 }
