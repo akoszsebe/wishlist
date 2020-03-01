@@ -9,7 +9,7 @@ import 'package:wishlist/src/datamodels/alarm_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/user_api_provider.dart';
 import 'package:wishlist/src/repository/session_repository.dart';
-import 'package:wishlist/util/shared_prefs.dart';
+import 'package:wishlist/src/util/shared_prefs.dart';
 
 class LoginController extends ControllerMVC {
   static const platform = const MethodChannel('samples.flutter.dev/battery');

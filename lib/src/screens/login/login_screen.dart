@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/alarm/alarm_screen.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
-import 'package:wishlist/util/alert_dialog.dart';
-import 'package:wishlist/util/buttons/google.dart';
-import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/src/util/alert_dialogs.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
+import 'package:wishlist/src/widgets/buttons/googlesignin_button.dart';
 
 class LoginScreen extends StatefulWidget {
   @protected

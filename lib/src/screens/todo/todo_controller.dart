@@ -10,9 +10,9 @@ import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/repository/session_repository.dart';
-import 'package:wishlist/util/firebasenotifications.dart';
-import 'package:wishlist/util/shared_prefs.dart';
-import 'package:wishlist/util/alarm_manager.dart';
+import 'package:wishlist/src/util/firebasenotifications.dart';
+import 'package:wishlist/src/util/shared_prefs.dart';
+import 'package:wishlist/src/util/alarm_manager.dart';
 
 class TodoController extends ControllerMVC {
   factory TodoController() {

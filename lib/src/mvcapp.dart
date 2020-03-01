@@ -8,8 +8,8 @@ import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/login/login_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/home_screen.dart';
-import 'package:wishlist/util/app_routes.dart';
-import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/src/util/app_routes.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
 
 class MVCApp extends AppMVC {
   MVCApp({Key key}) : super(con: _todocontroller, key: key);

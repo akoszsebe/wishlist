@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:provider/provider.dart';
-import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
 import 'package:wishlist/src/screens/alarm/alarm_controller.dart';
 
 class AlarmScreen extends StatefulWidget {

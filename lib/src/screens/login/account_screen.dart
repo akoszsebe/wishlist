@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:wishlist/src/screens/login/login_controller.dart';
 import 'package:wishlist/src/screens/login/login_screen.dart';
-import 'package:wishlist/util/shared_prefs.dart';
-import 'package:wishlist/util/theme_provider.dart';
-import 'package:wishlist/util/theme_switch.dart';
-import 'package:wishlist/util/widgets.dart';
+import 'package:wishlist/src/util/shared_prefs.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
+import 'package:wishlist/src/widgets/buttons/rounded_button.dart';
+import 'package:wishlist/src/widgets/theme_switch.dart';
 
 class AccountScreen extends StatefulWidget {
   @protected
@@ -99,7 +99,7 @@ class _AccountScreenState extends StateMVC<AccountScreen>
                                       color: Theme.of(context).primaryColorDark,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                buildButton(
+                                RoundedButton(
                                     AppLocalizations.of(context)
                                         .tr('profile.sign_out'), () {
                                   _con.logout();
@@ -107,8 +107,10 @@ class _AccountScreenState extends StateMVC<AccountScreen>
                                       MaterialPageRoute(builder: (context) {
                                     return LoginScreen();
                                   }), ModalRoute.withName('/'));
-                                }, Theme.of(context).primaryColor,
-                                    Theme.of(context).primaryColorDark)
+                                },
+                                    textColor: Theme.of(context).primaryColor,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColorDark)
                               ],
                             ),
                             CircleAvatar(

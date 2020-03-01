@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wishlist/util/buttons/button.dart';
+import 'package:wishlist/src/widgets/buttons/stretchable_button.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final String text;

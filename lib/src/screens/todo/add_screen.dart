@@ -2,10 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
-import 'package:wishlist/util/app_keys.dart';
-import 'package:wishlist/util/app_theme.dart';
-import 'package:wishlist/util/widgets.dart';
-import 'package:wishlist/util/theme_provider.dart';
+import 'package:wishlist/src/util/app_keys.dart';
+import 'package:wishlist/src/util/style/app_theme.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
+import 'package:wishlist/src/widgets/buttons/rounded_button.dart';
+import 'package:wishlist/src/widgets/color_selector.dart';
 
 class AddScreen extends StatefulWidget {
   final String todoId;
@@ -75,7 +76,7 @@ class _AddScreenState extends State<AddScreen>
                             children: <Widget>[
                               buildTitleFormFieled(),
                               Padding(padding: EdgeInsets.only(top: 8)),
-                              buildColorSelector(context, color,
+                              ColorSelector(color,
                                   (index, color) {
                                 this.color = color;
                                 setBackgroundColor(lastColor, color);
@@ -92,14 +93,14 @@ class _AddScreenState extends State<AddScreen>
               floatingActionButton: Padding(
                 padding: EdgeInsets.only(left: 32),
                 child:
-                    buildButton(AppLocalizations.of(context).tr('addtodo'), () {
+                    RoundedButton(AppLocalizations.of(context).tr('addtodo'), () {
                   final form = formKey.currentState;
                   if (form.validate()) {
                     form.save();
                     _con.saveTodo(_title, _content, _category);
                     Navigator.pop(context);
                   }
-                }, color, Theme.of(context).primaryColorDark),
+                }, textColor: color, backgroundColor : Theme.of(context).primaryColorDark),
               ));
         });
   }

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
-import 'package:wishlist/util/alarm_manager.dart' as AlarmManager;
+import 'package:wishlist/src/util/alarm_manager.dart' as AlarmManager;
 
 class AlarmController extends ControllerMVC {
   static const platform = const MethodChannel('samples.flutter.dev/battery');

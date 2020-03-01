@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:wishlist/src/database/database_helper.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
-import 'package:wishlist/util/alert_dialog.dart';
-import 'package:wishlist/util/app_keys.dart';
+import 'package:wishlist/src/util/alert_dialogs.dart';
+import 'package:wishlist/src/util/app_keys.dart';
 import 'package:intl/intl.dart';
-import 'package:wishlist/util/widgets.dart';
+import 'package:wishlist/src/widgets/buttons/rounded_button.dart';
+import 'package:wishlist/src/widgets/color_selector.dart';
 
 class EditScreen extends StatefulWidget {
   final TodoResponse todo;
@@ -80,7 +81,7 @@ class _EditScreenState extends State<EditScreen>
                         children: <Widget>[
                           buildTitleFormField(),
                           Padding(padding: EdgeInsets.only(top: 8)),
-                          buildColorSelector(context, color, (index, color) {
+                          ColorSelector(color, (index, color) {
                             this.color = color;
                             setBackgroundColor(lastColor, color);
                             _category = index;
@@ -99,7 +100,7 @@ class _EditScreenState extends State<EditScreen>
               ),
               floatingActionButton: Padding(
                 padding: EdgeInsets.only(left: 32),
-                child: buildButton(
+                child: RoundedButton(
                     AppLocalizations.of(context).tr('updatetodo'), () {
                   final form = formKey.currentState;
                   if (form.validate()) {
@@ -107,7 +108,10 @@ class _EditScreenState extends State<EditScreen>
                     _con.update(_todo.id, _title, _content, _category);
                     Navigator.pop(context);
                   }
-                }, color, Theme.of(context).primaryColorDark),
+                },
+                    textColor: color,
+                    backgroundColor: Theme.of(context).primaryColorDark
+                    ),
               ));
         });
   }

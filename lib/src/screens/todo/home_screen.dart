@@ -11,10 +11,10 @@ import 'package:wishlist/src/screens/login/account_screen.dart';
 import 'package:wishlist/src/screens/todo/edit_screen.dart';
 import 'package:wishlist/src/screens/todo/todo_controller.dart';
 import 'package:wishlist/src/screens/todo/add_screen.dart';
-import 'package:wishlist/util/alert_dialog.dart';
-import 'package:wishlist/util/app_theme.dart';
-import 'package:wishlist/util/theme_provider.dart';
-import 'package:wishlist/util/widgets.dart';
+import 'package:wishlist/src/util/alert_dialogs.dart';
+import 'package:wishlist/src/util/style/app_theme.dart';
+import 'package:wishlist/src/util/theme_provider.dart';
+import 'package:wishlist/src/widgets/loader.dart';
 
 class HomeScreen extends StatefulWidget {
   @protected
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildList(var data, List<int> alarmIds) {
-    if (data == null) return buildLoader(context);
+    if (data == null) return Loader();
     if (data.length == 0)
       return ListView(children: <Widget>[
         Center(child: Text(AppLocalizations.of(context).tr("nodata")))
