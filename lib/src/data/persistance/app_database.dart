@@ -3,15 +3,15 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
-class DatabaseHelper {
+class AppDatabase {
   static final _databaseName = "MyDatabase.db";
   final String tableAlarms = 'alarms';
   // Increment this version when you need to change the schema.
   static final _databaseVersion = 1;
 
   // Make this a singleton class.
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  AppDatabase._privateConstructor();
+  static final AppDatabase instance = AppDatabase._privateConstructor();
 
   // Only allow a single open connection to the database.
   static Database _database;

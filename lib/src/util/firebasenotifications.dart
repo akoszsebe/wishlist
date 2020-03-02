@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:wishlist/src/datamodels/push_notification_model.dart';
+import 'package:wishlist/src/data/model/push_notification_model.dart';
 
 class FirebaseNotifications {
   FirebaseMessaging _firebaseMessaging;

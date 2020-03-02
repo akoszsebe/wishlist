@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:wishlist/src/datamodels/user_model.dart';
-import 'package:wishlist/src/datamodels/alarm_model.dart';
+import 'package:wishlist/src/data/model/user_model.dart';
+import 'package:wishlist/src/data/model/alarm_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/user_api_provider.dart';
-import 'package:wishlist/src/repository/session_repository.dart';
+import 'package:wishlist/src/data/repository/session_repository.dart';
 import 'package:wishlist/src/util/shared_prefs.dart';
 
 class LoginController extends ControllerMVC {

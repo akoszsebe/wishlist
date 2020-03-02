@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:wishlist/src/datamodels/user_model.dart';
+import 'package:wishlist/src/data/model/user_model.dart';
 import 'package:wishlist/src/networking/api_exeption%20.dart';
 import 'package:wishlist/src/networking/api_provider.dart';
 

@@ -1,14 +1,14 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:wishlist/src/database/database_helper.dart';
-import 'package:wishlist/src/datamodels/alarm_model.dart';
+import 'package:wishlist/src/data/persistance/app_database.dart';
+import 'package:wishlist/src/data/model/alarm_model.dart';
 
-class AlarmDatabase {
-  DatabaseHelper helper;
+class AlarmDao {
+  AppDatabase helper;
 
-  AlarmDatabase._privateConstructor() {
-    helper = DatabaseHelper.instance;
+  AlarmDao._privateConstructor() {
+    helper = AppDatabase.instance;
   }
-  static final AlarmDatabase instance = AlarmDatabase._privateConstructor();
+  static final AlarmDao instance = AlarmDao._privateConstructor();
 
   Future<int> insertAlarm(AlarmModel alarm) async {
     Database db = await helper.database;

@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:wishlist/src/database/alarm_database.dart';
-import 'package:wishlist/src/database/database_helper.dart';
-import 'package:wishlist/src/datamodels/alarm_model.dart';
-import 'package:wishlist/src/datamodels/push_notification_model.dart';
-import 'package:wishlist/src/datamodels/user_model.dart';
+import 'package:wishlist/src/data/persistance/dao/alarm_dao.dart';
+import 'package:wishlist/src/data/persistance/app_database.dart';
+import 'package:wishlist/src/data/model/alarm_model.dart';
+import 'package:wishlist/src/data/model/push_notification_model.dart';
+import 'package:wishlist/src/data/model/user_model.dart';
 import 'package:wishlist/src/networking/providers/notification_api_provider.dart';
 import 'package:wishlist/src/networking/providers/todo_Api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
-import 'package:wishlist/src/repository/session_repository.dart';
+import 'package:wishlist/src/data/repository/session_repository.dart';
 import 'package:wishlist/src/util/firebasenotifications.dart';
 import 'package:wishlist/src/util/shared_prefs.dart';
 import 'package:wishlist/src/util/alarm_manager.dart';
@@ -35,7 +35,7 @@ class TodoController extends ControllerMVC {
   final NotificationApiProvider notificationApiProvider =
       NotificationApiProvider();
   final FirebaseNotifications _firebaseNotifications = FirebaseNotifications();
-  final AlarmDatabase helper = AlarmDatabase.instance;
+  final AlarmDao _alarmDao = AlarmDao.instance;
 
   void init() async {
     _firebaseNotifications..setUpFirebase();
@@ -59,7 +59,7 @@ class TodoController extends ControllerMVC {
       throw error;
     });
     list = resopnse;
-    alarmIds = await helper.queryAlarmIds();
+    alarmIds = await _alarmDao.queryAlarmIds();
     order = await SharedPrefs.getOrderList();
     //print(order);
     list.sort((a, b) => order.indexOf(a.id).compareTo(order.indexOf(b.id)));
@@ -150,7 +150,7 @@ class TodoController extends ControllerMVC {
         title: title,
         when: when.millisecondsSinceEpoch,
         alarmEnabled: true);
-    await helper.insertAlarm(alarm);
+    await _alarmDao.insertAlarm(alarm);
   }
 
   Future<void> updateAlarm(DateTime when, int id, String title,
@@ -160,15 +160,15 @@ class TodoController extends ControllerMVC {
         title: title,
         when: when.millisecondsSinceEpoch,
         alarmEnabled: alarmEnabled);
-    await helper.updateAlarm(alarm);
+    await _alarmDao.updateAlarm(alarm);
   }
 
   Future<void> _deleteAlarmFromDb(int id) async {
-    await helper.deleteAlarm(id);
+    await _alarmDao.deleteAlarm(id);
   }
 
   Future<AlarmModel> existsAlarm(id) async {
-    var alarm = await helper.queryAlarm(id);
+    var alarm = await _alarmDao.queryAlarm(id);
     if (alarm == null) {
       print('read row $alarm: empty');
       return null;

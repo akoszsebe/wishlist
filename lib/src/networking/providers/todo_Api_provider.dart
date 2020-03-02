@@ -5,7 +5,7 @@ import 'package:wishlist/src/networking/api_exeption%20.dart';
 import 'package:wishlist/src/networking/api_provider.dart';
 import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
-import 'package:wishlist/src/repository/session_repository.dart';
+import 'package:wishlist/src/data/repository/session_repository.dart';
 
 class TodoApiProvider extends ApiProvider {
   Future<List<TodoResponse>> getTodos() async {

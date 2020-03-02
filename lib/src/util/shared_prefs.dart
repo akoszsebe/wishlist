@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wishlist/src/datamodels/user_model.dart';
+import 'package:wishlist/src/data/model/user_model.dart';
 import 'dart:convert';
 
 class SharedPrefs {
