@@ -19,6 +19,7 @@ import android.app.AlarmManager
 import android.content.Context
 import android.app.PendingIntent
 import android.os.SystemClock
+import android.provider.Settings
 import android.view.WindowManager
 import android.app.KeyguardManager
 import android.os.PowerManager
@@ -30,6 +31,7 @@ import android.widget.Toast
 import android.view.KeyEvent.KEYCODE_HOME
 import android.view.KeyEvent
 import android.view.ViewGroup.LayoutParams
+import android.net.Uri;
 
 
 
@@ -104,6 +106,14 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun setAlarm(time : Long, id : Int, title : String){
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName())
+            )
+            startActivityForResult(intent, 0) 
+            return
+        } 
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var intent = Intent(context, SampleBootReceiver::class.java)
         intent.putExtra("title", title);
