@@ -62,6 +62,8 @@ class MainActivity: FlutterActivity() {
                                 intent.removeExtra("needAlarm");
                                 println(resultt + title);
                                 result.success("{ \"alarm\" : \"" + resultt + "\", \"title\" : \"" + title + "\", \"id\" : " + id + " }");
+                            } else if (call.method.equals("checkDrawOwerOtherAppsPermisison")) {
+                                checkDrawOwerOtherAppsPermisison();
                             } else if (call.method.equals("finishAndRemoveTask")) { 
                                 finishAndRemoveTask();
                             } else {
@@ -105,15 +107,19 @@ class MainActivity: FlutterActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
+    private fun checkDrawOwerOtherAppsPermisison(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName())
+                )
+                startActivityForResult(intent, 0) 
+            }
+        }
+    }
+
     private fun setAlarm(time : Long, id : Int, title : String){
-        if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + getPackageName())
-            )
-            startActivityForResult(intent, 0) 
-            return
-        } 
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var intent = Intent(context, SampleBootReceiver::class.java)
         intent.putExtra("title", title);

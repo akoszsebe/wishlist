@@ -194,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .tr('bottom_sheet_setdatealarm')),
                         onTap: () async {
                           Navigator.pop(context);
+                          _con.checkPermisison();
                           showTimePickerDialog(
                               context,
                               AppLocalizations.of(context)

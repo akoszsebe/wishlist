@@ -118,6 +118,7 @@ class _EditScreenState extends State<EditScreen>
 
   void pickTile(BuildContext context,
       {DatabaseActions action = DatabaseActions.insert}) {
+    _con.checkPermisison();
     showTimePickerDialog(
         context,
         AppLocalizations.of(context).tr('dialog_timepicker_title'),

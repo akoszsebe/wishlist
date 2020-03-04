@@ -188,4 +188,8 @@ class TodoController extends ControllerMVC {
     for (var l in list) tmp.add(l.id);
     SharedPrefs.setOrderList(tmp);
   }
+
+  Future<void> checkPermisison() async {
+    await checkDrawOwerOtherAppsPermisison();
+  }
 }

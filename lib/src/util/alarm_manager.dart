@@ -22,3 +22,11 @@ Future<void> cancelAlarm(int id) async {
     print(e);
   }
 }
+
+Future<void> checkDrawOwerOtherAppsPermisison() async {
+  try {
+    await platform.invokeMethod('checkDrawOwerOtherAppsPermisison');
+  } on PlatformException catch (e) {
+    print(e);
+  }
+}
