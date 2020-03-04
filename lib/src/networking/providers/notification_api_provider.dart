@@ -4,12 +4,26 @@ import 'package:dio/dio.dart';
 import 'package:wishlist/src/networking/api_exeption%20.dart';
 import 'package:wishlist/src/networking/api_provider.dart';
 
-class NotificationApiProvider extends ApiProvider {
+abstract class NotificationApiProvider {
+  Future<bool> registerForPushNotification(String deviceToken, String userId);
 
-  Future<bool> registerForPushNotification(String deviceToken,String userId) async {
+  Future<bool> unregisterFromPushNotification(String deviceToken);
+
+  Future<bool> notifyTodo(String title, String message);
+
+  Future<bool> sendAlarm(String title, int when);
+
+  factory NotificationApiProvider() => _NotificationApiProvider();
+}
+
+class _NotificationApiProvider extends ApiProvider
+    implements NotificationApiProvider {
+  @override
+  Future<bool> registerForPushNotification(
+      String deviceToken, String userId) async {
     try {
       await dio.post(baseUrl + "/notification/register",
-          data: { "token": deviceToken, "user_id": userId},
+          data: {"token": deviceToken, "user_id": userId},
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;
@@ -19,10 +33,11 @@ class NotificationApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> unregisterFromPushNotification(String deviceToken) async {
     try {
       await dio.post(baseUrl + "/notification/unregister",
-          data: { "token": deviceToken },
+          data: {"token": deviceToken},
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;
@@ -32,10 +47,11 @@ class NotificationApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> notifyTodo(String title, String message) async {
     try {
       await dio.post(baseUrl + "/reports/notify",
-          data: { "title": title, "body": message},
+          data: {"title": title, "body": message},
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;
@@ -45,10 +61,11 @@ class NotificationApiProvider extends ApiProvider {
     }
   }
 
-    Future<bool> sendAlarm(String title, int when) async {
+  @override
+  Future<bool> sendAlarm(String title, int when) async {
     try {
       await dio.post(baseUrl + "/reports/sendalarm",
-          data: { "title": title, "when": when},
+          data: {"title": title, "when": when},
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;

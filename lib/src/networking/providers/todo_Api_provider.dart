@@ -7,7 +7,20 @@ import 'package:wishlist/src/networking/request/todo_request.dart';
 import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/data/repository/session_repository.dart';
 
-class TodoApiProvider extends ApiProvider {
+abstract class TodoApiProvider {
+  Future<List<TodoResponse>> getTodos();
+
+  Future<bool> addTodo(TodoRequest todoRequest);
+
+  Future<bool> deleteTodo(DeleteTodoRequest deleteTodoRequest);
+
+  Future<bool> updateTodo(UpdateTodoRequest updateTodoRequest);
+
+  factory TodoApiProvider() => _TodoApiProvider();
+}
+
+class _TodoApiProvider extends ApiProvider implements TodoApiProvider {
+  @override
   Future<List<TodoResponse>> getTodos() async {
     try {
       Response response = await dio.get(baseUrl + "/reports",
@@ -21,6 +34,7 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> addTodo(TodoRequest todoRequest) async {
     try {
       String firebaseDeviceId = SessionRepository().getFirebaseDeviceId();
@@ -37,6 +51,7 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> deleteTodo(DeleteTodoRequest deleteTodoRequest) async {
     try {
       String firebaseDeviceId = SessionRepository().getFirebaseDeviceId();
@@ -53,10 +68,11 @@ class TodoApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> updateTodo(UpdateTodoRequest updateTodoRequest) async {
     try {
       String firebaseDeviceId = SessionRepository().getFirebaseDeviceId();
-      print("firebase id "+ firebaseDeviceId);
+      print("firebase id " + firebaseDeviceId);
       await dio.post(baseUrl + "/reports/update",
           data: updateTodoRequest.toJson(),
           options: Options(

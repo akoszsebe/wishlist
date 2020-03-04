@@ -5,8 +5,16 @@ import 'package:wishlist/src/data/model/user_model.dart';
 import 'package:wishlist/src/networking/api_exeption%20.dart';
 import 'package:wishlist/src/networking/api_provider.dart';
 
-class UserApiProvider extends ApiProvider {
+abstract class UserApiProvider {
+  Future<bool> registerUser(UserModel user);
 
+  Future<bool> unregisterUser(String userId);
+
+  factory UserApiProvider() => _UserApiProvider();
+}
+
+class _UserApiProvider extends ApiProvider implements UserApiProvider {
+  @override
   Future<bool> registerUser(UserModel user) async {
     try {
       await dio.post(baseUrl + "/user/create",
@@ -20,10 +28,11 @@ class UserApiProvider extends ApiProvider {
     }
   }
 
+  @override
   Future<bool> unregisterUser(String userId) async {
     try {
       await dio.post(baseUrl + "/user/delete",
-          data: { "user_id": userId },
+          data: {"user_id": userId},
           options: Options(contentType: ContentType.parse("application/json")),
           cancelToken: token);
       return true;
