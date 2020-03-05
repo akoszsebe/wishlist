@@ -10,9 +10,9 @@ import 'package:wishlist/src/networking/providers/notification_api_provider.dart
 import 'package:wishlist/src/networking/providers/user_api_provider.dart';
 import 'package:wishlist/src/data/repository/session_repository.dart';
 import 'package:wishlist/src/util/shared_prefs.dart';
+import 'package:wishlist/src/util/platform_calls.dart' as PlatformCalls;
 
 class LoginController extends ControllerMVC {
-  static const platform = const MethodChannel('samples.flutter.dev/battery');
   factory LoginController() {
     if (_this == null) _this = LoginController._();
     return _this;
@@ -46,11 +46,11 @@ class LoginController extends ControllerMVC {
 
   void checkIfStartedForAlarm(Function(bool,AlarmModel) callback) async {
     try {
-      final String result = await platform.invokeMethod('getIntentParams');
+      final String result = await PlatformCalls.getIntentParams();
       var alarmResult= AlarmModel.fromJson(jsonDecode(result));
       print(alarmResult.toJson());
       if (alarmResult.alarm == "alarm") {
-        turnOnScreen();
+        PlatformCalls.turnOnScreen();
         callback(true, alarmResult);
       } else
         callback(false, alarmResult);
@@ -61,12 +61,7 @@ class LoginController extends ControllerMVC {
     refresh();
   }
 
-  void turnOnScreen() async {
-    const platform = const MethodChannel('samples.flutter.dev/battery');
-    try {
-      await platform.invokeMethod('wakeUpScreen');
-    } on PlatformException catch (e) { print(e);}
-  }
+ 
 
   void login(Function(String) callback) async {
     try {

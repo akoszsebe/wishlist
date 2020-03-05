@@ -12,7 +12,7 @@ import 'package:wishlist/src/networking/response/todo_response.dart';
 import 'package:wishlist/src/data/repository/session_repository.dart';
 import 'package:wishlist/src/util/firebasenotifications.dart';
 import 'package:wishlist/src/util/shared_prefs.dart';
-import 'package:wishlist/src/util/alarm_manager.dart';
+import 'package:wishlist/src/util/platform_calls.dart';
 
 class TodoController extends ControllerMVC {
   factory TodoController() {

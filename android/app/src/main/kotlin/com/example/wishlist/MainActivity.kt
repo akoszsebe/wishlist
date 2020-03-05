@@ -36,7 +36,7 @@ import android.net.Uri;
 
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "samples.flutter.dev/battery"
+    private val CHANNEL = "samples.flutter.dev/alarm"
     private var alarmMgr: AlarmManager? = null
     private lateinit var alarmIntent: PendingIntent
 
