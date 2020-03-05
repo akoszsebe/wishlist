@@ -249,7 +249,10 @@ class _HomeScreenState extends State<HomeScreen> {
     var color = CardColors.colorSelector(d.category, cardColors);
     var item = Padding(
         padding: EdgeInsets.only(bottom: 4),
-        child: Container(
+        child: ConstrainedBox(
+            constraints: new BoxConstraints(
+              maxHeight: 150.0,
+            ),
             child: Card(
                 color: color,
                 child: ListTile(
@@ -263,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(fontWeight: FontWeight.w700),
                       )),
                   subtitle: Container(
-                      padding: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 50),
                       child: Text(d.content, overflow: TextOverflow.fade)),
                   trailing: IconButton(
                     padding: EdgeInsets.all(0),
